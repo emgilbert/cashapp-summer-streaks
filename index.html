@@ -22,7 +22,7 @@
     .btn-vol-dn  { position:absolute;left:-3px;top:210px;width:3px;height:40px;background:#2a2a2a;border-radius:3px 0 0 3px; }
     .btn-power   { position:absolute;right:-3px;top:178px;width:3px;height:64px;background:#2a2a2a;border-radius:0 3px 3px 0; }
     .iphone { width:393px;height:852px;background:#111;border-radius:54px;padding:10px;box-shadow:0 0 0 1px #3a3a3a,inset 0 0 0 1px #4a4a4a;overflow:hidden; }
-    .phone-screen { width:100%;height:100%;background:#0C0C0C;border-radius:46px;overflow:hidden;position:relative; }
+    .phone-screen { width:100%;height:100%;background:#000;border-radius:46px;overflow:hidden;position:relative; }
     .dynamic-island { position:absolute;top:12px;left:50%;transform:translateX(-50%);width:120px;height:34px;background:#000;border-radius:20px;z-index:30; }
 
     /* Both screens live inside phone-screen */
@@ -35,14 +35,13 @@
     .screen-inner::-webkit-scrollbar { display:none; }
     .screen-inner.pushed { transform:translateX(-30%); }
 
-    /* ── Transaction screen (slides in from right) ── */
+    /* Transaction screen */
     .tx-screen {
       position:absolute;inset:0;
       background:#0C0C0C;overflow-y:auto;scrollbar-width:none;border-radius:46px;
       transform:translateX(100%);
       transition:transform .35s cubic-bezier(.4,0,.2,1);
-      will-change:transform;
-      z-index:40;
+      will-change:transform;z-index:40;
     }
     .tx-screen::-webkit-scrollbar { display:none; }
     .tx-screen.visible { transform:translateX(0); }
@@ -62,9 +61,9 @@
     .status-bar { display:flex;justify-content:space-between;align-items:center;padding:58px 26px 4px;font-size:15px;font-weight:700; }
     .sb-icons { display:flex;align-items:center;gap:5px;font-size:12px; }
 
-    /* ── Nav (Money tab) ── */
+    /* ── Nav ── */
     .nav-row { display:flex;align-items:center;justify-content:space-between;padding:8px 20px 4px; }
-    .nav-back { width:34px;height:34px;background:rgba(255,255,255,.07);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer; }
+    .nav-back { width:34px;height:34px;background:rgba(255,255,255,.07);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px; }
     .nav-title { font-size:17px;font-weight:700; }
     .nav-more { width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:20px; }
 
@@ -80,7 +79,7 @@
 
 
     /* ════════════════════════════════════════════
-       SUMMER STREAKS MODULE (Money tab card)
+       SUMMER STREAKS MODULE — warm palette only
     ════════════════════════════════════════════ */
     .streak-module {
       margin:0 14px 14px;
@@ -123,122 +122,12 @@
     .sm-ticket-icon { font-size:16px; }
     .sm-entry-num { font-size:20px;font-weight:900;letter-spacing:-.5px; }
     .sm-entry-word { font-size:12px;font-weight:600;color:var(--t2); }
-
     .sm-entry-flash { position:absolute;font-size:13px;font-weight:800;color:var(--sun);pointer-events:none;animation:floatUp .8s ease forwards;z-index:10; }
     @keyframes floatUp { 0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-28px)} }
-
     .sm-action-btn { background:linear-gradient(135deg,var(--sun),var(--coral));color:#fff;border:none;border-radius:100px;padding:9px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;flex-shrink:0;transition:opacity .15s;white-space:nowrap;box-shadow:0 2px 10px rgba(255,170,0,.25); }
     .sm-action-btn:active { opacity:.8; }
-
     .sm-cta-sub { font-size:10px;color:var(--t3);text-align:right;transition:opacity .3s; }
     .sm-cta-sub.hidden { opacity:0; }
-
-
-    /* ════════════════════════════════════════════
-       TRANSACTION SCREEN
-    ════════════════════════════════════════════ */
-
-    .tx-content { color:var(--text);padding-bottom:40px; }
-
-    /* Status bar (reused) */
-
-    /* Tx nav */
-    .tx-nav { display:flex;align-items:center;justify-content:space-between;padding:8px 20px 12px; }
-    .tx-back { display:flex;align-items:center;gap:6px;color:var(--sun);font-size:15px;font-weight:700;cursor:pointer;background:none;border:none;font-family:inherit; }
-    .tx-nav-title { font-size:16px;font-weight:700; }
-    .tx-nav-pill { background:var(--sun-dim);border:1px solid var(--sun-mid);border-radius:100px;padding:4px 10px;font-size:10px;font-weight:700;color:var(--sun); }
-
-    /* Month entry card (warm) */
-    .tx-month-card {
-      margin:0 14px 20px;
-      background:linear-gradient(145deg,#1c1100,#150d00);
-      border:1px solid var(--sun-mid);border-radius:20px;
-      padding:18px;position:relative;overflow:hidden;
-    }
-    .tx-month-card::after { content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;background:radial-gradient(circle,rgba(255,170,0,.10) 0%,transparent 65%);pointer-events:none; }
-
-    .tx-month-top { display:flex;align-items:center;justify-content:space-between;margin-bottom:12px; }
-    .tx-month-label { font-size:12px;font-weight:700;color:var(--sun);text-transform:uppercase;letter-spacing:1px; }
-    .tx-month-name { font-size:18px;font-weight:900;letter-spacing:-.5px; }
-
-    .tx-entry-display { display:flex;align-items:baseline;gap:8px;margin-bottom:8px; }
-    .tx-entry-big { font-size:48px;font-weight:900;letter-spacing:-2px;line-height:1;transition:all .2s; }
-    .tx-entry-big.pop { animation:entryPop .3s cubic-bezier(.34,1.56,.64,1); }
-    @keyframes entryPop { 0%{transform:scale(1)}50%{transform:scale(1.2)}100%{transform:scale(1)} }
-    .tx-entry-unit { font-size:16px;font-weight:600;color:var(--t2);padding-bottom:6px; }
-
-    .tx-entry-status { font-size:13px;font-weight:600;min-height:18px;transition:all .3s; }
-    .tx-entry-status.secured { color:var(--green); }
-    .tx-entry-status.needs   { color:var(--t2); }
-
-    /* Streak progress mini (in tx screen) */
-    .tx-streak-mini { display:flex;align-items:center;gap:6px;margin-top:12px; }
-    .tx-streak-dot { width:8px;height:8px;border-radius:50%; }
-    .tx-streak-dot.done { background:var(--sun); }
-    .tx-streak-dot.active { background:var(--sun);box-shadow:0 0 0 2px var(--sun-dim); }
-    .tx-streak-dot.locked { background:#333; }
-    .tx-streak-line { flex:1;height:1px; }
-    .tx-streak-line.done { background:var(--sun); }
-    .tx-streak-line.pending { background:#2a2a2a; }
-    .tx-streak-lbl { font-size:10px;font-weight:600;color:var(--t3); }
-
-    /* Section header */
-    .tx-section-hdr { padding:0 20px 10px;display:flex;align-items:center;justify-content:space-between; }
-    .tx-section-title { font-size:15px;font-weight:700; }
-    .tx-section-sub { font-size:11px;color:var(--t2); }
-
-    /* Transaction type list */
-    .tx-list { padding:0 14px;display:flex;flex-direction:column;gap:8px;margin-bottom:24px; }
-
-    .tx-item {
-      background:var(--surf);border-radius:16px;
-      padding:14px 16px;
-      display:flex;align-items:center;gap:14px;
-      cursor:pointer;
-      border:1px solid transparent;
-      transition:all .15s;
-      position:relative;overflow:hidden;
-    }
-    .tx-item:active { transform:scale(.98);opacity:.9; }
-    .tx-item.tapped { border-color:var(--sun-mid);background:#1a1200; }
-
-    .tx-item-ico {
-      width:44px;height:44px;border-radius:50%;
-      display:flex;align-items:center;justify-content:center;
-      font-size:20px;flex-shrink:0;
-      background:var(--surf2);
-      transition:background .2s;
-    }
-    .tx-item.tapped .tx-item-ico { background:var(--sun-dim); }
-
-    .tx-item-body { flex:1;min-width:0; }
-    .tx-item-name { font-size:15px;font-weight:700;margin-bottom:2px; }
-    .tx-item-desc { font-size:12px;color:var(--t2); }
-
-    .tx-item-right { display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0; }
-    .tx-item-arrow { font-size:18px;color:#3a3a3a;transition:color .2s; }
-    .tx-item.tapped .tx-item-arrow { color:var(--sun); }
-    .tx-item-badge {
-      font-size:10px;font-weight:700;
-      background:var(--sun-dim);border:1px solid var(--sun-mid);
-      border-radius:100px;padding:2px 7px;color:var(--sun);
-      opacity:0;transform:scale(.8);transition:all .2s;
-    }
-    .tx-item.tapped .tx-item-badge { opacity:1;transform:scale(1); }
-
-    /* +1 flash on tx items */
-    .tx-flash { position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:14px;font-weight:800;color:var(--sun);pointer-events:none;animation:floatUp .7s ease forwards;z-index:5; }
-
-    /* Footer note */
-    .tx-footer {
-      margin:0 14px;
-      background:var(--surf);border-radius:16px;
-      padding:14px 16px;
-      display:flex;align-items:flex-start;gap:10px;
-    }
-    .tx-footer-icon { font-size:20px;flex-shrink:0;margin-top:1px; }
-    .tx-footer-text { font-size:12px;color:var(--t2);line-height:1.5; }
-    .tx-footer-text strong { color:var(--text); }
 
 
     /* ── Standard Cash App cards ── */
@@ -317,6 +206,59 @@
     .m-reward-amt { font-size:20px;font-weight:900;color:var(--green);letter-spacing:-.5px; }
     .m-btn { width:100%;background:linear-gradient(135deg,var(--sun),var(--coral));color:#fff;border:none;border-radius:100px;padding:16px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit; }
     .m-btn:active { opacity:.85; }
+
+    /* ════════════════════════════════════════════
+       TRANSACTION SCREEN
+    ════════════════════════════════════════════ */
+    .tx-content { color:var(--text);padding-bottom:40px; }
+    .tx-nav { display:flex;align-items:center;justify-content:space-between;padding:8px 20px 12px; }
+    .tx-back { display:flex;align-items:center;gap:4px;color:var(--sun);font-size:15px;font-weight:700;cursor:pointer;background:none;border:none;font-family:inherit; }
+    .tx-nav-title { font-size:16px;font-weight:700;color:#fff; }
+    .tx-nav-pill { background:var(--sun-dim);border:1px solid var(--sun-mid);border-radius:100px;padding:4px 10px;font-size:10px;font-weight:700;color:var(--sun); }
+    .tx-month-card { margin:0 14px 20px;background:linear-gradient(145deg,#1c1100,#150d00);border:1px solid var(--sun-mid);border-radius:20px;padding:18px;position:relative;overflow:hidden; }
+    .tx-month-card::after { content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;background:radial-gradient(circle,rgba(255,170,0,.10) 0%,transparent 65%);pointer-events:none; }
+    .tx-month-top { display:flex;align-items:center;justify-content:space-between;margin-bottom:12px; }
+    .tx-month-label { font-size:12px;font-weight:700;color:var(--sun);text-transform:uppercase;letter-spacing:1px; }
+    .tx-month-name { font-size:18px;font-weight:900;letter-spacing:-.5px;color:#fff; }
+    .tx-entry-display { display:flex;align-items:baseline;gap:8px;margin-bottom:8px; }
+    .tx-entry-big { font-size:48px;font-weight:900;letter-spacing:-2px;line-height:1;transition:all .2s;color:#fff; }
+    .tx-entry-big.pop { animation:entryPop .3s cubic-bezier(.34,1.56,.64,1); }
+    @keyframes entryPop { 0%{transform:scale(1)}50%{transform:scale(1.2)}100%{transform:scale(1)} }
+    .tx-entry-unit { font-size:16px;font-weight:600;color:var(--t2);padding-bottom:6px; }
+    .tx-entry-status { font-size:13px;font-weight:600;min-height:18px;transition:all .3s; }
+    .tx-entry-status.secured { color:var(--green); }
+    .tx-entry-status.needs   { color:var(--t2); }
+    .tx-streak-mini { display:flex;align-items:center;gap:6px;margin-top:14px; }
+    .tx-streak-dot { width:8px;height:8px;border-radius:50%; }
+    .tx-streak-dot.done   { background:var(--sun); }
+    .tx-streak-dot.active { background:var(--sun);box-shadow:0 0 0 2px var(--sun-dim); }
+    .tx-streak-dot.locked { background:#333; }
+    .tx-streak-line { flex:1;height:1px; }
+    .tx-streak-line.done    { background:var(--sun); }
+    .tx-streak-line.pending { background:#2a2a2a; }
+    .tx-streak-lbl { font-size:10px;font-weight:600;color:var(--t3); }
+    .tx-section-hdr { padding:0 20px 10px;display:flex;align-items:center;justify-content:space-between; }
+    .tx-section-title { font-size:15px;font-weight:700;color:#fff; }
+    .tx-section-sub { font-size:11px;color:var(--t2); }
+    .tx-list { padding:0 14px;display:flex;flex-direction:column;gap:8px;margin-bottom:24px; }
+    .tx-item { background:var(--surf);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;border:1px solid transparent;transition:all .15s;position:relative;overflow:hidden; }
+    .tx-item:active { transform:scale(.98);opacity:.9; }
+    .tx-item.tapped { border-color:var(--sun-mid);background:#1a1200; }
+    .tx-item-ico { width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;background:var(--surf2);transition:background .2s; }
+    .tx-item.tapped .tx-item-ico { background:var(--sun-dim); }
+    .tx-item-body { flex:1;min-width:0; }
+    .tx-item-name { font-size:15px;font-weight:700;margin-bottom:2px;color:#fff; }
+    .tx-item-desc { font-size:12px;color:var(--t2); }
+    .tx-item-right { display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0; }
+    .tx-item-arrow { font-size:18px;color:#3a3a3a;transition:color .2s; }
+    .tx-item.tapped .tx-item-arrow { color:var(--sun); }
+    .tx-item-badge { font-size:10px;font-weight:700;background:var(--sun-dim);border:1px solid var(--sun-mid);border-radius:100px;padding:2px 7px;color:var(--sun);opacity:0;transform:scale(.8);transition:all .2s; }
+    .tx-item.tapped .tx-item-badge { opacity:1;transform:scale(1); }
+    .tx-flash { position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:14px;font-weight:800;color:var(--sun);pointer-events:none;animation:floatUp .7s ease forwards;z-index:5; }
+    .tx-footer { margin:0 14px;background:var(--surf);border-radius:16px;padding:14px 16px;display:flex;align-items:flex-start;gap:10px; }
+    .tx-footer-icon { font-size:20px;flex-shrink:0;margin-top:1px; }
+    .tx-footer-text { font-size:12px;color:var(--t2);line-height:1.5; }
+    .tx-footer-text strong { color:#fff; }
   </style>
 </head>
 <body>
@@ -360,29 +302,26 @@
 
           <!-- SUMMER STREAKS MODULE -->
           <div class="streak-module" id="streakMod">
-            <div class="sm-pill">☀️ Jun–Aug</div>
             <div class="sm-header">
               <div class="sm-sun" id="smSun">☀️</div>
               <div>
-                <div class="sm-eyebrow">Limited Campaign</div>
                 <div class="sm-headline">Summer Streaks</div>
               </div>
             </div>
             <div class="sm-prize">
               <span class="sm-prize-label">For a chance to win</span>
-              <span class="sm-prize-amt">$500</span>
+              <span class="sm-prize-amt">$1,000</span>
               <span class="sm-prize-sub">Complete all 3 months</span>
             </div>
             <div class="sm-steps" id="smSteps"></div>
             <div class="sm-entry-row">
               <div class="sm-total-entries">
-                <span class="sm-ticket-icon">🎟</span>
+                <span class="sm-ticket-icon">🔥</span>
                 <span class="sm-entry-num" id="smEntryNum">0</span>
                 <span class="sm-entry-word">entries</span>
               </div>
               <div id="smActionArea" style="position:relative"></div>
             </div>
-            <div class="sm-cta-sub" id="smCtaSub">send, receive, pay with your card, and more</div>
           </div>
 
           <!-- Savings & Bitcoin -->
@@ -419,7 +358,7 @@
             <div class="al-item"><div class="al-ico">💵</div><div class="al-info"><div class="al-name">Paper money</div><div class="al-sub">Find a retailer near you</div></div><div class="al-arrow">›</div></div>
           </div>
 
-        </div><!-- /app-content -->
+        </div>
 
         <div class="tab-bar">
           <div class="tab-item"><div class="tab-ico">🏠</div><span>Home</span></div>
@@ -439,14 +378,12 @@
             <div class="sb-icons"><span>▲▲▲</span><span style="font-size:14px">WiFi</span><span>🔋</span></div>
           </div>
 
-          <!-- Nav -->
           <div class="tx-nav">
             <button class="tx-back" onclick="closeTxScreen()">‹ Back</button>
             <div class="tx-nav-title">Summer Streaks</div>
             <div class="tx-nav-pill">☀️ Jun–Aug</div>
           </div>
 
-          <!-- Month entry card -->
           <div class="tx-month-card">
             <div class="tx-month-top">
               <div>
@@ -455,20 +392,14 @@
               </div>
               <div style="text-align:right">
                 <div style="font-size:10px;font-weight:600;color:var(--t2);margin-bottom:3px">Total entries</div>
-                <div style="font-size:18px;font-weight:900;color:var(--sun)" id="txTotalEntries">4 🎟</div>
+                <div style="font-size:18px;font-weight:900;color:var(--sun)" id="txTotalEntries">4 🔥</div>
               </div>
             </div>
-
             <div class="tx-entry-display">
               <div class="tx-entry-big" id="txEntryBig">0</div>
               <div class="tx-entry-unit">this month</div>
             </div>
-
-            <div class="tx-entry-status needs" id="txEntryStatus">
-              Make 1 transaction to secure your streak
-            </div>
-
-            <!-- Mini streak progress -->
+            <div class="tx-entry-status needs" id="txEntryStatus">Make 1 transaction to secure your streak</div>
             <div class="tx-streak-mini" style="margin-top:14px">
               <div class="tx-streak-dot" id="txDot0"></div>
               <div class="tx-streak-line" id="txLine01"></div>
@@ -480,31 +411,26 @@
             </div>
           </div>
 
-          <!-- Transaction types -->
           <div class="tx-section-hdr">
             <div class="tx-section-title">What counts as a transaction?</div>
             <div class="tx-section-sub">Each = +1 entry</div>
           </div>
+          <div class="tx-list" id="txList"></div>
 
-          <div class="tx-list" id="txList">
-            <!-- Rendered by JS -->
-          </div>
-
-          <!-- Footer explanation -->
           <div class="tx-footer">
-            <div class="tx-footer-icon">🎟</div>
+            <div class="tx-footer-icon">🔥</div>
             <div class="tx-footer-text">
               <strong>More transactions = more entries.</strong><br>
-              You need at least 1 per month to stay in the streak. Every additional transaction this month increases your chances of winning $500.
+              You need at least 1 per month to stay in the streak. Every additional transaction increases your chances of winning $1,000.
             </div>
           </div>
 
-        </div><!-- /tx-content -->
+        </div>
       </div><!-- /txScreen -->
 
-    </div><!-- /phone-screen -->
-  </div><!-- /iphone -->
-</div><!-- /iphone-wrap -->
+    </div>
+  </div>
+</div>
 
 
 <!-- Demo controls -->
@@ -527,11 +453,11 @@
     <div class="m-desc" id="mDesc">Keep going — 2 more months to qualify.</div>
     <div class="m-entries-box">
       <div class="m-entries-lbl">Entries earned this month</div>
-      <div class="m-entries-num" id="mEntriesNum">3 🎟</div>
+      <div class="m-entries-num" id="mEntriesNum">3 🔥</div>
     </div>
     <div class="m-reward-box">
       <div class="m-reward-lbl">Prize drawing</div>
-      <div class="m-reward-amt" id="mRewardAmt">For a chance to win $500</div>
+      <div class="m-reward-amt" id="mRewardAmt">For a chance to win $1,000</div>
     </div>
     <button class="m-btn" onclick="dismissModal()">Keep it going →</button>
   </div>
@@ -539,7 +465,6 @@
 
 
 <script>
-  // ── Data ──────────────────────────────────────────────────
   const CAMPAIGN = ['June', 'July', 'August'];
 
   const TX_TYPES = [
@@ -552,15 +477,14 @@
   ];
 
   const MONTH_MILESTONES = [
-    { emoji:'☀️', tag:'June Complete', title:'June done!',       desc:'2 more active months to qualify for the $500 drawing.' },
-    { emoji:'🌊', tag:'July Complete', title:'Halfway there!',   desc:'One more month to qualify for the drawing. Finish strong in August.' },
-    { emoji:'🏆', tag:'Summer Complete',title:'You\'re in!',     desc:'You completed all 3 months. Your entries are locked in for the $500 drawing.' },
+    { emoji:'☀️', tag:'June Complete',   title:'June done!',     desc:'2 more active months to qualify for the $1,000 drawing.' },
+    { emoji:'🌊', tag:'July Complete',   title:'Halfway there!', desc:'One more month to qualify. Finish strong in August.' },
+    { emoji:'🏆', tag:'Summer Complete', title:'You\'re in!',    desc:'You completed all 3 months. Your entries are locked in for the $1,000 drawing.' },
   ];
 
-  // ── State ─────────────────────────────────────────────────
   let S = {
-    campaignMonth: 1,   // 0=June,1=July(active),2=August
-    entries: [4, 0, 0], // entries per month — June already has 4
+    campaignMonth: 1,
+    entries: [4, 0, 0],
     tappedTypes: new Set(),
   };
 
@@ -573,40 +497,30 @@
     return true;
   }
 
-  // ── Render (Money tab module) ──────────────────────────────
   function render() {
     const cm = S.campaignMonth;
-    const total = totalEntries();
+    document.getElementById('smSun').textContent =
+      cm >= 2 && monthDone(2) ? '🏆' : cm >= 1 ? '🌊' : '☀️';
 
-    // Sun icon
-    const sunEl = document.getElementById('smSun');
-    sunEl.textContent = cm >= 2 && monthDone(2) ? '🏆' : cm >= 1 ? '🌊' : '☀️';
-
-    // Steps
     let html = '';
-    [0,1,2].forEach((i) => {
+    [0,1,2].forEach(i => {
       const isDone   = monthDone(i);
       const isActive = !isDone && i === cm && streakIntact();
       const cls      = isDone ? 'done' : isActive ? 'active' : 'locked';
       const ent      = S.entries[i];
-      const entStr   = isDone ? `${ent} 🎟` : isActive ? '—' : '—';
+      const entStr   = ent > 0 ? `${ent} 🔥` : '—';
       const entCls   = ent > 0 ? 'has-entries' : 'none';
-      const lbl      = CAMPAIGN[i];
       const icon     = ['☀️','🌊','🏆'][i];
-
       if (i > 0) html += `<div class="sm-connector ${isDone ? 'done' : 'pending'}"></div>`;
       html += `<div class="sm-step-col">
         <div class="sm-step-dot ${cls}">${isDone ? '✓' : icon}</div>
-        <div class="sm-step-lbl ${cls}">${lbl.substring(0,3)}</div>
+        <div class="sm-step-lbl ${cls}">${CAMPAIGN[i].substring(0,3)}</div>
         <div class="sm-step-entries ${entCls}">${entStr}</div>
       </div>`;
     });
     document.getElementById('smSteps').innerHTML = html;
+    document.getElementById('smEntryNum').textContent = totalEntries();
 
-    // Entry counter
-    document.getElementById('smEntryNum').textContent = total;
-
-    // CTA
     const ctaEl = document.getElementById('smActionArea');
     const subEl = document.getElementById('smCtaSub');
     const mod   = document.getElementById('streakMod');
@@ -620,53 +534,39 @@
       mod.style.borderColor = 'var(--sun-hi)';
     } else {
       const done = monthDone(cm);
-      const lbl  = done ? `Make another → +1 entry` : `Make a transaction → +1 entry`;
-      ctaEl.innerHTML = `<button class="sm-action-btn" onclick="openTxScreen()">${lbl}</button>`;
+      ctaEl.innerHTML = `<button class="sm-action-btn" onclick="openTxScreen()">${done ? 'Earn more entries' : 'Earn entries'}</button>`;
       subEl.classList.remove('hidden');
       mod.style.borderColor = done ? 'rgba(255,170,0,.38)' : 'var(--sun-mid)';
     }
   }
 
-  // ── Render (transaction screen) ───────────────────────────
   function renderTxScreen() {
-    const cm    = S.campaignMonth;
-    const mEnt  = S.entries[cm];
-    const total = totalEntries();
+    const cm   = S.campaignMonth;
+    const mEnt = S.entries[cm];
+    document.getElementById('txMonthLabel').textContent   = CAMPAIGN[cm];
+    document.getElementById('txTotalEntries').textContent = `${totalEntries()} 🔥`;
+    document.getElementById('txEntryBig').textContent     = mEnt;
 
-    // Month label
-    document.getElementById('txMonthLabel').textContent = CAMPAIGN[cm];
-    document.getElementById('txTotalEntries').textContent = `${total} 🎟`;
-
-    // Big entry count
-    const bigEl = document.getElementById('txEntryBig');
-    bigEl.textContent = mEnt;
-
-    // Status text
     const statusEl = document.getElementById('txEntryStatus');
-    if (mEnt === 0) {
-      statusEl.textContent = 'Make 1 transaction to secure your streak';
-      statusEl.className   = 'tx-entry-status needs';
-    } else {
-      statusEl.textContent = `✓ Streak secured — each extra transaction adds more chances`;
-      statusEl.className   = 'tx-entry-status secured';
-    }
+    statusEl.textContent = mEnt === 0
+      ? 'Make 1 transaction to secure your streak'
+      : '✓ Streak secured — each extra transaction adds more chances';
+    statusEl.className = 'tx-entry-status ' + (mEnt === 0 ? 'needs' : 'secured');
 
-    // Mini streak dots
     [0,1,2].forEach(i => {
-      const dot = document.getElementById(`txDot${i}`);
-      dot.className = 'tx-streak-dot ' + (monthDone(i) ? 'done' : i === cm ? 'active' : 'locked');
+      document.getElementById(`txDot${i}`).className =
+        'tx-streak-dot ' + (monthDone(i) ? 'done' : i === cm ? 'active' : 'locked');
     });
     [['txLine01',0],['txLine12',1]].forEach(([id,i]) => {
-      const el = document.getElementById(id);
-      el.className = 'tx-streak-line ' + (monthDone(i) ? 'done' : 'pending');
+      document.getElementById(id).className = 'tx-streak-line ' + (monthDone(i) ? 'done' : 'pending');
     });
-    const lblParts = CAMPAIGN.map((m,i) => {
-      const s = m.substring(0,3);
-      return monthDone(i) ? `${s} ✓` : i === cm ? `<span style="color:var(--sun)">${s}</span>` : s;
-    });
-    document.getElementById('txStreakLbl').innerHTML = lblParts.join(' · ');
+    document.getElementById('txStreakLbl').innerHTML =
+      CAMPAIGN.map((m,i) => {
+        const s = m.substring(0,3);
+        return monthDone(i) ? `${s} ✓` : i === cm
+          ? `<span style="color:var(--sun)">${s}</span>` : s;
+      }).join(' · ');
 
-    // Transaction list
     const listEl = document.getElementById('txList');
     listEl.innerHTML = '';
     TX_TYPES.forEach(tx => {
@@ -689,7 +589,6 @@
     });
   }
 
-  // ── Navigation ────────────────────────────────────────────
   function openTxScreen() {
     renderTxScreen();
     document.getElementById('moneyScreen').classList.add('pushed');
@@ -700,23 +599,20 @@
   function closeTxScreen() {
     document.getElementById('moneyScreen').classList.remove('pushed');
     document.getElementById('txScreen').classList.remove('visible');
-    render(); // refresh money tab totals
+    render();
   }
 
-  // ── Tap a transaction type ────────────────────────────────
   function tapTx(type) {
     const cm = S.campaignMonth;
     S.entries[cm]++;
     S.tappedTypes.add(type);
 
-    // Animate the big number
     const bigEl = document.getElementById('txEntryBig');
     bigEl.textContent = S.entries[cm];
     bigEl.classList.remove('pop');
-    void bigEl.offsetWidth; // reflow
+    void bigEl.offsetWidth;
     bigEl.classList.add('pop');
 
-    // Float +1 on the item
     const item = document.getElementById(`txItem_${type}`);
     if (item) {
       item.classList.add('tapped');
@@ -726,40 +622,32 @@
       item.appendChild(flash);
       setTimeout(() => flash.remove(), 800);
     }
-
-    // Update rest of screen
     renderTxScreen();
   }
 
-  // ── Advance month (demo control) ──────────────────────────
   function advanceMonth() {
     const cm = S.campaignMonth;
     if (cm >= 2 && monthDone(2)) { toast('🏆 Campaign complete — you\'re in the drawing!'); return; }
-
     if (!monthDone(cm)) {
       toast(`😬 No activity in ${CAMPAIGN[cm]} — streak broken`);
       S.campaignMonth = Math.min(cm + 1, 2);
       S.tappedTypes.clear();
-      render();
-      return;
+      render(); return;
     }
-
-    const milestone      = MONTH_MILESTONES[cm];
-    const entriesThisMon = S.entries[cm];
-    S.campaignMonth      = Math.min(cm + 1, 2);
+    const milestone = MONTH_MILESTONES[cm];
+    const earned    = S.entries[cm];
+    S.campaignMonth = Math.min(cm + 1, 2);
     S.tappedTypes.clear();
-
     render();
-    setTimeout(() => { launchConfetti(); showModal(milestone, entriesThisMon); }, 320);
+    setTimeout(() => { launchConfetti(); showModal(milestone, earned); }, 320);
   }
 
   function resetAll() {
-    S = { campaignMonth: 0, entries: [0,0,0], tappedTypes: new Set() };
-    toast('↺ Reset to start of campaign (June)');
+    S = { campaignMonth: 0, entries:[0,0,0], tappedTypes: new Set() };
+    toast('↺ Reset to start of campaign');
     render();
   }
 
-  // ── Toast ─────────────────────────────────────────────────
   let _tt;
   function toast(msg) {
     const el = document.getElementById('toast');
@@ -767,24 +655,22 @@
     clearTimeout(_tt); _tt = setTimeout(() => el.classList.remove('on'), 2800);
   }
 
-  // ── Modal ─────────────────────────────────────────────────
   function showModal(m, entriesThisMonth) {
-    document.getElementById('mEmoji').textContent    = m.emoji;
-    document.getElementById('mTag').textContent      = m.tag;
-    document.getElementById('mTitle').textContent    = m.title;
-    document.getElementById('mDesc').textContent     = m.desc;
-    document.getElementById('mEntriesNum').textContent = `${entriesThisMonth} 🎟`;
+    document.getElementById('mEmoji').textContent      = m.emoji;
+    document.getElementById('mTag').textContent        = m.tag;
+    document.getElementById('mTitle').textContent      = m.title;
+    document.getElementById('mDesc').textContent       = m.desc;
+    document.getElementById('mEntriesNum').textContent = `${entriesThisMonth} 🔥`;
     document.getElementById('mRewardAmt').textContent  =
-      S.campaignMonth >= 3 ? 'You\'re entered to win $500!' : 'For a chance to win $500';
+      S.campaignMonth >= 3 ? 'You\'re entered to win $1,000!' : 'For a chance to win $1,000';
     document.getElementById('overlay').classList.add('on');
   }
 
   function dismissModal() {
     document.getElementById('overlay').classList.remove('on');
-    toast(`🎟 ${totalEntries()} total entries — keep going!`);
+    toast(`🔥 ${totalEntries()} total entries — keep going!`);
   }
 
-  // ── Confetti ──────────────────────────────────────────────
   function launchConfetti() {
     const wrap = document.getElementById('confetti');
     wrap.innerHTML = '';
@@ -798,7 +684,6 @@
     setTimeout(() => { wrap.innerHTML = ''; }, 3200);
   }
 
-  // ── Clock ─────────────────────────────────────────────────
   function tick() {
     const d = new Date();
     const t = d.getHours() + ':' + String(d.getMinutes()).padStart(2,'0');
@@ -806,7 +691,6 @@
     document.getElementById('clock2').textContent = t;
   }
   tick(); setInterval(tick, 30000);
-
   render();
 </script>
 </body>
