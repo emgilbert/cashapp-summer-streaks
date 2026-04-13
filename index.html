@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cash App — Summer Streaks Prototype</title>
+  <style>
+    *, *::before, *::after { margin:0;padding:0;box-sizing:border-box; }
+
+    body {
+      background: radial-gradient(ellipse at 50% 0%, #1a1a0a 0%, #0a0a0a 60%);
+      min-height:100vh;display:flex;flex-direction:column;align-items:center;
+      padding:32px 20px 60px;
+      font-family:-apple-system,BlinkMacSystemFont,'Inter','SF Pro Display',sans-serif;
+    }
+    .proto-label { font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#444;margin-bottom:24px; }
+
+    /* ── iPhone frame ── */
+    .iphone-wrap { position:relative;filter:drop-shadow(0 40px 80px rgba(0,0,0,0.8)); }
+    .btn-silent  { position:absolute;left:-3px;top:108px;width:3px;height:30px;background:#2a2a2a;border-radius:3px 0 0 3px; }
+    .btn-vol-up  { position:absolute;left:-3px;top:158px;width:3px;height:40px;background:#2a2a2a;border-radius:3px 0 0 3px; }
+    .btn-vol-dn  { position:absolute;left:-3px;top:210px;width:3px;height:40px;background:#2a2a2a;border-radius:3px 0 0 3px; }
+    .btn-power   { position:absolute;right:-3px;top:178px;width:3px;height:64px;background:#2a2a2a;border-radius:0 3px 3px 0; }
+    .iphone { width:393px;height:852px;background:#111;border-radius:54px;padding:10px;box-shadow:0 0 0 1px #3a3a3a,inset 0 0 0 1px #4a4a4a;overflow:hidden; }
+    .phone-screen { width:100%;height:100%;background:#0C0C0C;border-radius:46px;overflow:hidden;position:relative; }
+    .dynamic-island { position:absolute;top:12px;left:50%;transform:translateX(-50%);width:120px;height:34px;background:#000;border-radius:20px;z-index:30; }
+
+    /* Both screens live inside phone-screen */
+    .screen-inner {
+      position:absolute;inset:0;
+      background:#0C0C0C;overflow-y:auto;scrollbar-width:none;border-radius:46px;
+      transition:transform .35s cubic-bezier(.4,0,.2,1);
+      will-change:transform;
+    }
+    .screen-inner::-webkit-scrollbar { display:none; }
+    .screen-inner.pushed { transform:translateX(-30%); }
+
+    /* ── Transaction screen (slides in from right) ── */
+    .tx-screen {
+      position:absolute;inset:0;
+      background:#0C0C0C;overflow-y:auto;scrollbar-width:none;border-radius:46px;
+      transform:translateX(100%);
+      transition:transform .35s cubic-bezier(.4,0,.2,1);
+      will-change:transform;
+      z-index:40;
+    }
+    .tx-screen::-webkit-scrollbar { display:none; }
+    .tx-screen.visible { transform:translateX(0); }
+
+    /* ── Design tokens ── */
+    :root {
+      --bg:#0C0C0C;--surf:#181818;--surf2:#222;
+      --green:#00D632;--gdim:rgba(0,214,50,.10);--gmid:rgba(0,214,50,.22);
+      --text:#fff;--t2:#888;--t3:#444;--r:18px;
+      --sun:#FFAA00;--sun-dim:rgba(255,170,0,.10);--sun-mid:rgba(255,170,0,.22);--sun-hi:rgba(255,170,0,.38);
+      --coral:#FF6B35;
+    }
+
+    .app-content { color:var(--text);padding-bottom:96px; }
+
+    /* ── Status bar ── */
+    .status-bar { display:flex;justify-content:space-between;align-items:center;padding:58px 26px 4px;font-size:15px;font-weight:700; }
+    .sb-icons { display:flex;align-items:center;gap:5px;font-size:12px; }
+
+    /* ── Nav (Money tab) ── */
+    .nav-row { display:flex;align-items:center;justify-content:space-between;padding:8px 20px 4px; }
+    .nav-back { width:34px;height:34px;background:rgba(255,255,255,.07);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer; }
+    .nav-title { font-size:17px;font-weight:700; }
+    .nav-more { width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:20px; }
+
+    /* ── Balance ── */
+    .balance-wrap { padding:8px 20px 14px; }
+    .bal-label { font-size:12px;color:var(--t2);margin-bottom:2px;display:flex;align-items:center;gap:6px; }
+    .bal-amount { font-size:40px;font-weight:800;letter-spacing:-1.5px;margin-bottom:14px; }
+    .action-row { display:flex;gap:10px; }
+    .action-btn { flex:1;background:var(--surf);border-radius:14px;padding:11px 6px 10px;display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer; }
+    .action-btn-ico { width:38px;height:38px;background:var(--surf2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px; }
+    .action-btn-label { font-size:12px;font-weight:600; }
+    .hr { height:1px;background:rgba(255,255,255,.06);margin:6px 20px 14px; }
+
+
+    /* ════════════════════════════════════════════
+       SUMMER STREAKS MODULE (Money tab card)
+    ════════════════════════════════════════════ */
+    .streak-module {
+      margin:0 14px 14px;
+      background:linear-gradient(145deg,#1c1100 0%,#150d00 55%,#0f0900 100%);
+      border:1px solid var(--sun-mid);border-radius:20px;
+      padding:16px 16px 14px;position:relative;overflow:hidden;transition:border-color .3s;
+    }
+    .streak-module::after { content:'';position:absolute;top:-55px;right:-55px;width:180px;height:180px;background:radial-gradient(circle,rgba(255,170,0,.10) 0%,transparent 65%);pointer-events:none; }
+
+    .sm-pill { position:absolute;top:14px;right:14px;background:var(--sun-dim);border:1px solid var(--sun-mid);border-radius:100px;padding:3px 9px;font-size:10px;font-weight:700;color:var(--sun);letter-spacing:.4px; }
+    .sm-header { display:flex;align-items:center;gap:10px;margin-bottom:10px;padding-right:72px; }
+    .sm-sun { font-size:26px;line-height:1;animation:sunPulse 3s ease-in-out infinite;filter:drop-shadow(0 0 8px rgba(255,170,0,.5)); }
+    @keyframes sunPulse { 0%,100%{transform:scale(1) rotate(-3deg);filter:drop-shadow(0 0 8px rgba(255,170,0,.5))}50%{transform:scale(1.08) rotate(3deg);filter:drop-shadow(0 0 14px rgba(255,170,0,.8))} }
+    .sm-eyebrow { font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--sun);margin-bottom:1px; }
+    .sm-headline { font-size:16px;font-weight:800;letter-spacing:-.3px; }
+
+    .sm-prize { background:var(--sun-dim);border:1px solid var(--sun-mid);border-radius:10px;padding:9px 12px;margin-bottom:14px;display:flex;align-items:baseline;gap:6px; }
+    .sm-prize-label { font-size:11px;font-weight:600;color:var(--t2); }
+    .sm-prize-amt { font-size:22px;font-weight:900;letter-spacing:-.5px;background:linear-gradient(90deg,var(--sun),var(--coral));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
+    .sm-prize-sub { font-size:11px;color:var(--t2);margin-left:auto;flex-shrink:0; }
+
+    .sm-steps { display:flex;align-items:flex-start;margin-bottom:12px; }
+    .sm-step-col { display:flex;flex-direction:column;align-items:center;gap:4px; }
+    .sm-step-dot { width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;transition:all .3s; }
+    .sm-step-dot.done { background:linear-gradient(135deg,var(--sun),var(--coral));color:#fff;font-weight:800;font-size:13px;box-shadow:0 2px 8px rgba(255,170,0,.3); }
+    .sm-step-dot.active { background:var(--sun-dim);border:2px solid var(--sun);box-shadow:0 0 0 3px var(--sun-dim); }
+    .sm-step-dot.locked { background:rgba(255,255,255,.04);border:2px solid #2a2a2a;color:#3a3a3a; }
+    .sm-step-lbl { font-size:10px;font-weight:700;text-align:center;width:32px;transition:color .3s; }
+    .sm-step-lbl.done,.sm-step-lbl.active { color:var(--sun); }
+    .sm-step-lbl.locked { color:var(--t3); }
+    .sm-step-entries { font-size:10px;font-weight:700;text-align:center;width:42px;line-height:1.2;transition:color .3s; }
+    .sm-step-entries.has-entries { color:var(--sun); }
+    .sm-step-entries.none { color:var(--t3); }
+    .sm-connector { flex:1;height:2px;margin-top:15px;transition:background .3s; }
+    .sm-connector.done { background:linear-gradient(90deg,var(--coral),var(--sun)); }
+    .sm-connector.pending { background:#2a2a2a; }
+
+    .sm-entry-row { display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px; }
+    .sm-total-entries { display:flex;align-items:center;gap:6px; }
+    .sm-ticket-icon { font-size:16px; }
+    .sm-entry-num { font-size:20px;font-weight:900;letter-spacing:-.5px; }
+    .sm-entry-word { font-size:12px;font-weight:600;color:var(--t2); }
+
+    .sm-entry-flash { position:absolute;font-size:13px;font-weight:800;color:var(--sun);pointer-events:none;animation:floatUp .8s ease forwards;z-index:10; }
+    @keyframes floatUp { 0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-28px)} }
+
+    .sm-action-btn { background:linear-gradient(135deg,var(--sun),var(--coral));color:#fff;border:none;border-radius:100px;padding:9px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;flex-shrink:0;transition:opacity .15s;white-space:nowrap;box-shadow:0 2px 10px rgba(255,170,0,.25); }
+    .sm-action-btn:active { opacity:.8; }
+
+    .sm-cta-sub { font-size:10px;color:var(--t3);text-align:right;transition:opacity .3s; }
+    .sm-cta-sub.hidden { opacity:0; }
+
+
+    /* ════════════════════════════════════════════
+       TRANSACTION SCREEN
+    ════════════════════════════════════════════ */
+
+    .tx-content { color:var(--text);padding-bottom:40px; }
+
+    /* Status bar (reused) */
+
+    /* Tx nav */
+    .tx-nav { display:flex;align-items:center;justify-content:space-between;padding:8px 20px 12px; }
+    .tx-back { display:flex;align-items:center;gap:6px;color:var(--sun);font-size:15px;font-weight:700;cursor:pointer;background:none;border:none;font-family:inherit; }
+    .tx-nav-title { font-size:16px;font-weight:700; }
+    .tx-nav-pill { background:var(--sun-dim);border:1px solid var(--sun-mid);border-radius:100px;padding:4px 10px;font-size:10px;font-weight:700;color:var(--sun); }
+
+    /* Month entry card (warm) */
+    .tx-month-card {
+      margin:0 14px 20px;
+      background:linear-gradient(145deg,#1c1100,#150d00);
+      border:1px solid var(--sun-mid);border-radius:20px;
+      padding:18px;position:relative;overflow:hidden;
+    }
+    .tx-month-card::after { content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;background:radial-gradient(circle,rgba(255,170,0,.10) 0%,transparent 65%);pointer-events:none; }
+
+    .tx-month-top { display:flex;align-items:center;justify-content:space-between;margin-bottom:12px; }
+    .tx-month-label { font-size:12px;font-weight:700;color:var(--sun);text-transform:uppercase;letter-spacing:1px; }
+    .tx-month-name { font-size:18px;font-weight:900;letter-spacing:-.5px; }
+
+    .tx-entry-display { display:flex;align-items:baseline;gap:8px;margin-bottom:8px; }
+    .tx-entry-big { font-size:48px;font-weight:900;letter-spacing:-2px;line-height:1;transition:all .2s; }
+    .tx-entry-big.pop { animation:entryPop .3s cubic-bezier(.34,1.56,.64,1); }
+    @keyframes entryPop { 0%{transform:scale(1)}50%{transform:scale(1.2)}100%{transform:scale(1)} }
+    .tx-entry-unit { font-size:16px;font-weight:600;color:var(--t2);padding-bottom:6px; }
+
+    .tx-entry-status { font-size:13px;font-weight:600;min-height:18px;transition:all .3s; }
+    .tx-entry-status.secured { color:var(--green); }
+    .tx-entry-status.needs   { color:var(--t2); }
+
+    /* Streak progress mini (in tx screen) */
+    .tx-streak-mini { display:flex;align-items:center;gap:6px;margin-top:12px; }
+    .tx-streak-dot { width:8px;height:8px;border-radius:50%; }
+    .tx-streak-dot.done { background:var(--sun); }
+    .tx-streak-dot.active { background:var(--sun);box-shadow:0 0 0 2px var(--sun-dim); }
+    .tx-streak-dot.locked { background:#333; }
+    .tx-streak-line { flex:1;height:1px; }
+    .tx-streak-line.done { background:var(--sun); }
+    .tx-streak-line.pending { background:#2a2a2a; }
+    .tx-streak-lbl { font-size:10px;font-weight:600;color:var(--t3); }
+
+    /* Section header */
+    .tx-section-hdr { padding:0 20px 10px;display:flex;align-items:center;justify-content:space-between; }
+    .tx-section-title { font-size:15px;font-weight:700; }
+    .tx-section-sub { font-size:11px;color:var(--t2); }
+
+    /* Transaction type list */
+    .tx-list { padding:0 14px;display:flex;flex-direction:column;gap:8px;margin-bottom:24px; }
+
+    .tx-item {
+      background:var(--surf);border-radius:16px;
+      padding:14px 16px;
+      display:flex;align-items:center;gap:14px;
+      cursor:pointer;
+      border:1px solid transparent;
+      transition:all .15s;
+      position:relative;overflow:hidden;
+    }
+    .tx-item:active { transform:scale(.98);opacity:.9; }
+    .tx-item.tapped { border-color:var(--sun-mid);background:#1a1200; }
+
+    .tx-item-ico {
+      width:44px;height:44px;border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      font-size:20px;flex-shrink:0;
+      background:var(--surf2);
+      transition:background .2s;
+    }
+    .tx-item.tapped .tx-item-ico { background:var(--sun-dim); }
+
+    .tx-item-body { flex:1;min-width:0; }
+    .tx-item-name { font-size:15px;font-weight:700;margin-bottom:2px; }
+    .tx-item-desc { font-size:12px;color:var(--t2); }
+
+    .tx-item-right { display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0; }
+    .tx-item-arrow { font-size:18px;color:#3a3a3a;transition:color .2s; }
+    .tx-item.tapped .tx-item-arrow { color:var(--sun); }
+    .tx-item-badge {
+      font-size:10px;font-weight:700;
+      background:var(--sun-dim);border:1px solid var(--sun-mid);
+      border-radius:100px;padding:2px 7px;color:var(--sun);
+      opacity:0;transform:scale(.8);transition:all .2s;
+    }
+    .tx-item.tapped .tx-item-badge { opacity:1;transform:scale(1); }
+
+    /* +1 flash on tx items */
+    .tx-flash { position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:14px;font-weight:800;color:var(--sun);pointer-events:none;animation:floatUp .7s ease forwards;z-index:5; }
+
+    /* Footer note */
+    .tx-footer {
+      margin:0 14px;
+      background:var(--surf);border-radius:16px;
+      padding:14px 16px;
+      display:flex;align-items:flex-start;gap:10px;
+    }
+    .tx-footer-icon { font-size:20px;flex-shrink:0;margin-top:1px; }
+    .tx-footer-text { font-size:12px;color:var(--t2);line-height:1.5; }
+    .tx-footer-text strong { color:var(--text); }
+
+
+    /* ── Standard Cash App cards ── */
+    .money-cards { padding:0 14px;display:flex;flex-direction:column;gap:8px;margin-bottom:14px; }
+    .mc { background:var(--surf);border-radius:var(--r);padding:14px 16px;display:flex;align-items:center;justify-content:space-between; }
+    .mc-info { flex:1; }
+    .mc-lbl { font-size:11px;color:var(--t2);margin-bottom:3px; }
+    .mc-amt { font-size:22px;font-weight:800;letter-spacing:-.5px; }
+    .mc-sub { font-size:11px;margin-top:2px; }
+    .mc-ico { width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px; }
+
+    .tax-card { margin:0 14px 14px;background:var(--surf);border-radius:var(--r);padding:14px 16px; }
+    .tax-lbl { font-size:11px;color:var(--t2);margin-bottom:8px; }
+    .tax-row { display:flex;align-items:center;justify-content:space-between; }
+    .tax-avail { font-size:13px;font-weight:600; }
+    .tax-used { font-size:11px;color:var(--t2); }
+    .tax-cta { display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);border-radius:100px;padding:8px 13px;font-size:12px;font-weight:700;cursor:pointer; }
+
+    .sec-title { padding:4px 18px 10px;font-size:16px;font-weight:700; }
+    .horiz-scroll { padding:0 14px;display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;margin-bottom:16px; }
+    .horiz-scroll::-webkit-scrollbar { display:none; }
+    .fy-card { flex-shrink:0;width:150px;background:var(--surf);border-radius:var(--r);padding:14px;position:relative;overflow:hidden; }
+    .fy-tag { position:absolute;top:10px;right:10px;background:var(--green);color:#000;font-size:9px;font-weight:800;border-radius:100px;padding:2px 7px; }
+    .fy-ico { font-size:26px;margin-bottom:8px; }
+    .fy-title { font-size:13px;font-weight:700;line-height:1.3;margin-bottom:4px; }
+    .fy-sub { font-size:11px;color:var(--t2); }
+    .add-list { padding:0 14px;display:flex;flex-direction:column;gap:2px; }
+    .al-item { display:flex;align-items:center;gap:12px;padding:13px 4px;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer; }
+    .al-item:last-child { border-bottom:none; }
+    .al-ico { width:40px;height:40px;background:var(--surf);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0; }
+    .al-info { flex:1; }
+    .al-name { font-size:14px;font-weight:600; }
+    .al-sub { font-size:11px;color:var(--t2);margin-top:1px; }
+    .al-arrow { color:#3a3a3a;font-size:18px; }
+
+    /* ── Tab bar ── */
+    .tab-bar { position:sticky;bottom:0;background:rgba(12,12,12,.96);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-around;padding:10px 8px 28px;z-index:20; }
+    .tab-item { display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10px;font-weight:600;color:#555;flex:1; }
+    .tab-item.active { color:var(--text); }
+    .tab-ico { font-size:22px; }
+    .tab-dot { width:4px;height:4px;border-radius:50%;background:var(--green);margin-top:-2px; }
+
+    /* ── Demo controls ── */
+    .demo-wrap { margin-top:28px;width:393px; }
+    .demo-lbl { font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#3a3a3a;text-align:center;margin-bottom:10px; }
+    .demo-row { display:grid;gap:8px;margin-bottom:8px; }
+    .demo-row.c2 { grid-template-columns:1fr 1fr; }
+    .dbtn { background:#181818;border:1px solid #282828;border-radius:12px;padding:11px 10px;color:var(--text);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;text-align:center; }
+    .dbtn:hover { background:#222; }
+    .dbtn:active { transform:scale(.96); }
+    .dbtn.r { background:rgba(255,68,68,.05);border-color:rgba(255,68,68,.15);color:#ff5555; }
+
+    /* ── Toast ── */
+    .toast { position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-8px);background:#242424;border:1px solid #333;border-radius:100px;padding:10px 18px;font-size:13px;font-weight:600;color:var(--text);opacity:0;transition:all .28s cubic-bezier(.34,1.56,.64,1);pointer-events:none;white-space:nowrap;z-index:9999;max-width:340px; }
+    .toast.on { opacity:1;transform:translateX(-50%) translateY(0); }
+
+    /* ── Confetti ── */
+    .confetti { position:fixed;inset:0;pointer-events:none;z-index:7000;overflow:hidden; }
+    .cp { position:absolute;width:8px;height:8px;border-radius:2px;top:-12px;animation:fall linear forwards; }
+    @keyframes fall { 0%{transform:translateY(0) rotate(0);opacity:1}85%{opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0} }
+
+    /* ── Milestone modal ── */
+    .overlay { position:fixed;inset:0;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;z-index:8000;opacity:0;pointer-events:none;transition:opacity .25s; }
+    .overlay.on { opacity:1;pointer-events:all; }
+    .modal { background:#1c1c1c;border:1px solid var(--sun-mid);border-radius:28px;padding:36px 26px 26px;text-align:center;max-width:320px;width:calc(100% - 48px);transform:scale(.85) translateY(16px);transition:transform .35s cubic-bezier(.34,1.56,.64,1); }
+    .overlay.on .modal { transform:scale(1) translateY(0); }
+    .m-emoji { font-size:68px;display:block;margin-bottom:10px; }
+    .m-tag { display:inline-block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--sun);background:var(--sun-dim);border:1px solid var(--sun-mid);border-radius:100px;padding:4px 12px;margin-bottom:12px; }
+    .m-title { font-size:25px;font-weight:900;letter-spacing:-.5px;margin-bottom:8px;color:var(--text); }
+    .m-desc { font-size:14px;color:var(--t2);line-height:1.5;margin-bottom:18px; }
+    .m-entries-box { background:var(--sun-dim);border:1px solid var(--sun-mid);border-radius:14px;padding:14px;margin-bottom:12px; }
+    .m-entries-lbl { font-size:11px;font-weight:600;color:var(--sun);margin-bottom:4px; }
+    .m-entries-num { font-size:30px;font-weight:900;color:var(--sun);letter-spacing:-1px; }
+    .m-reward-box { background:var(--gdim);border:1px solid var(--gmid);border-radius:14px;padding:12px;margin-bottom:22px; }
+    .m-reward-lbl { font-size:11px;font-weight:600;color:var(--green);margin-bottom:4px; }
+    .m-reward-amt { font-size:20px;font-weight:900;color:var(--green);letter-spacing:-.5px; }
+    .m-btn { width:100%;background:linear-gradient(135deg,var(--sun),var(--coral));color:#fff;border:none;border-radius:100px;padding:16px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit; }
+    .m-btn:active { opacity:.85; }
+  </style>
+</head>
+<body>
+
+<div class="proto-label">Cash App · Summer Streaks · Q2 Prototype</div>
+
+<div class="iphone-wrap">
+  <div class="btn-silent"></div><div class="btn-vol-up"></div>
+  <div class="btn-vol-dn"></div><div class="btn-power"></div>
+
+  <div class="iphone">
+    <div class="phone-screen">
+      <div class="dynamic-island"></div>
+
+      <!-- ══ SCREEN 1: Money tab ══ -->
+      <div class="screen-inner" id="moneyScreen">
+        <div class="app-content">
+
+          <div class="status-bar">
+            <span id="clock">9:41</span>
+            <div class="sb-icons"><span>▲▲▲</span><span style="font-size:14px">WiFi</span><span>🔋</span></div>
+          </div>
+
+          <div class="nav-row">
+            <div class="nav-back">‹</div>
+            <div class="nav-title">Money</div>
+            <div class="nav-more">···</div>
+          </div>
+
+          <div class="balance-wrap">
+            <div class="bal-label">Cash balance <span style="font-size:13px">👁</span></div>
+            <div class="bal-amount">$1,458.12</div>
+            <div class="action-row">
+              <div class="action-btn"><div class="action-btn-ico">＋</div><div class="action-btn-label">Add money</div></div>
+              <div class="action-btn"><div class="action-btn-ico">↑</div><div class="action-btn-label">Pay</div></div>
+              <div class="action-btn"><div class="action-btn-ico">↓</div><div class="action-btn-label">Request</div></div>
+            </div>
+          </div>
+
+          <div class="hr"></div>
+
+          <!-- SUMMER STREAKS MODULE -->
+          <div class="streak-module" id="streakMod">
+            <div class="sm-pill">☀️ Jun–Aug</div>
+            <div class="sm-header">
+              <div class="sm-sun" id="smSun">☀️</div>
+              <div>
+                <div class="sm-eyebrow">Limited Campaign</div>
+                <div class="sm-headline">Summer Streaks</div>
+              </div>
+            </div>
+            <div class="sm-prize">
+              <span class="sm-prize-label">For a chance to win</span>
+              <span class="sm-prize-amt">$500</span>
+              <span class="sm-prize-sub">Complete all 3 months</span>
+            </div>
+            <div class="sm-steps" id="smSteps"></div>
+            <div class="sm-entry-row">
+              <div class="sm-total-entries">
+                <span class="sm-ticket-icon">🎟</span>
+                <span class="sm-entry-num" id="smEntryNum">0</span>
+                <span class="sm-entry-word">entries</span>
+              </div>
+              <div id="smActionArea" style="position:relative"></div>
+            </div>
+            <div class="sm-cta-sub" id="smCtaSub">send, receive, pay with your card, and more</div>
+          </div>
+
+          <!-- Savings & Bitcoin -->
+          <div class="money-cards">
+            <div class="mc">
+              <div class="mc-info"><div class="mc-lbl">Savings</div><div class="mc-amt">$80.00</div><div class="mc-sub" style="color:#00D632">+2.5% APY</div></div>
+              <div class="mc-ico" style="background:rgba(0,214,50,.1)">🏦</div>
+            </div>
+            <div class="mc">
+              <div class="mc-info"><div class="mc-lbl">Bitcoin</div><div class="mc-amt">$8.05</div><div class="mc-sub" style="color:#FF6B1A">▼ 1.2% today</div></div>
+              <svg width="72" height="36" viewBox="0 0 72 36" style="flex-shrink:0"><polyline points="0,28 12,22 22,25 32,14 44,17 54,9 66,11 72,7" fill="none" stroke="#FF6B1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+
+          <div class="tax-card">
+            <div class="tax-lbl">For tax</div>
+            <div class="tax-row">
+              <div><div class="tax-avail">$69,000 available</div><div class="tax-used">$69,000 used</div></div>
+              <div class="tax-cta">▶ Resume your 2024 return</div>
+            </div>
+          </div>
+
+          <div class="sec-title">More for you</div>
+          <div class="horiz-scroll">
+            <div class="fy-card"><div class="fy-tag">FREE</div><div class="fy-ico">📈</div><div class="fy-title">Buy stocks with no commission fees</div><div class="fy-sub">Start with $1</div></div>
+            <div class="fy-card"><div class="fy-tag">NEW</div><div class="fy-ico">💳</div><div class="fy-title">Get your Cash Card</div><div class="fy-sub">Free Visa debit card</div></div>
+            <div class="fy-card"><div class="fy-ico">🔄</div><div class="fy-title">Set up auto-save</div><div class="fy-sub">Save a little each week</div></div>
+          </div>
+
+          <div class="sec-title">Add money</div>
+          <div class="add-list">
+            <div class="al-item"><div class="al-ico">🏦</div><div class="al-info"><div class="al-name">Linked bank account</div><div class="al-sub">Instant transfer available</div></div><div class="al-arrow">›</div></div>
+            <div class="al-item"><div class="al-ico">📋</div><div class="al-info"><div class="al-name">Payroll / direct deposit</div><div class="al-sub">Get paid up to 2 days early</div></div><div class="al-arrow">›</div></div>
+            <div class="al-item"><div class="al-ico">💵</div><div class="al-info"><div class="al-name">Paper money</div><div class="al-sub">Find a retailer near you</div></div><div class="al-arrow">›</div></div>
+          </div>
+
+        </div><!-- /app-content -->
+
+        <div class="tab-bar">
+          <div class="tab-item"><div class="tab-ico">🏠</div><span>Home</span></div>
+          <div class="tab-item"><div class="tab-ico">⚡</div><span>Activity</span></div>
+          <div class="tab-item active"><div class="tab-ico">💰</div><span>Money</span><div class="tab-dot"></div></div>
+          <div class="tab-item"><div class="tab-ico">👤</div><span>Profile</span></div>
+        </div>
+      </div><!-- /moneyScreen -->
+
+
+      <!-- ══ SCREEN 2: Make a transaction ══ -->
+      <div class="tx-screen" id="txScreen">
+        <div class="tx-content">
+
+          <div class="status-bar">
+            <span id="clock2">9:41</span>
+            <div class="sb-icons"><span>▲▲▲</span><span style="font-size:14px">WiFi</span><span>🔋</span></div>
+          </div>
+
+          <!-- Nav -->
+          <div class="tx-nav">
+            <button class="tx-back" onclick="closeTxScreen()">‹ Back</button>
+            <div class="tx-nav-title">Summer Streaks</div>
+            <div class="tx-nav-pill">☀️ Jun–Aug</div>
+          </div>
+
+          <!-- Month entry card -->
+          <div class="tx-month-card">
+            <div class="tx-month-top">
+              <div>
+                <div class="tx-month-label" id="txMonthLabel">July</div>
+                <div class="tx-month-name">Your entries</div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-size:10px;font-weight:600;color:var(--t2);margin-bottom:3px">Total entries</div>
+                <div style="font-size:18px;font-weight:900;color:var(--sun)" id="txTotalEntries">4 🎟</div>
+              </div>
+            </div>
+
+            <div class="tx-entry-display">
+              <div class="tx-entry-big" id="txEntryBig">0</div>
+              <div class="tx-entry-unit">this month</div>
+            </div>
+
+            <div class="tx-entry-status needs" id="txEntryStatus">
+              Make 1 transaction to secure your streak
+            </div>
+
+            <!-- Mini streak progress -->
+            <div class="tx-streak-mini" style="margin-top:14px">
+              <div class="tx-streak-dot" id="txDot0"></div>
+              <div class="tx-streak-line" id="txLine01"></div>
+              <div class="tx-streak-dot" id="txDot1"></div>
+              <div class="tx-streak-line" id="txLine12"></div>
+              <div class="tx-streak-dot" id="txDot2"></div>
+              <div style="width:8px"></div>
+              <div class="tx-streak-lbl" id="txStreakLbl">Jun ✓ · Jul · Aug</div>
+            </div>
+          </div>
+
+          <!-- Transaction types -->
+          <div class="tx-section-hdr">
+            <div class="tx-section-title">What counts as a transaction?</div>
+            <div class="tx-section-sub">Each = +1 entry</div>
+          </div>
+
+          <div class="tx-list" id="txList">
+            <!-- Rendered by JS -->
+          </div>
+
+          <!-- Footer explanation -->
+          <div class="tx-footer">
+            <div class="tx-footer-icon">🎟</div>
+            <div class="tx-footer-text">
+              <strong>More transactions = more entries.</strong><br>
+              You need at least 1 per month to stay in the streak. Every additional transaction this month increases your chances of winning $500.
+            </div>
+          </div>
+
+        </div><!-- /tx-content -->
+      </div><!-- /txScreen -->
+
+    </div><!-- /phone-screen -->
+  </div><!-- /iphone -->
+</div><!-- /iphone-wrap -->
+
+
+<!-- Demo controls -->
+<div class="demo-wrap">
+  <div class="demo-lbl">Prototype controls</div>
+  <div class="demo-row c2">
+    <button class="dbtn" onclick="advanceMonth()">⏩ Advance month</button>
+    <button class="dbtn r" onclick="resetAll()">↺ Reset all</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="confetti" id="confetti"></div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <span class="m-emoji" id="mEmoji">☀️</span>
+    <div class="m-tag" id="mTag">Month Complete</div>
+    <div class="m-title" id="mTitle">June done!</div>
+    <div class="m-desc" id="mDesc">Keep going — 2 more months to qualify.</div>
+    <div class="m-entries-box">
+      <div class="m-entries-lbl">Entries earned this month</div>
+      <div class="m-entries-num" id="mEntriesNum">3 🎟</div>
+    </div>
+    <div class="m-reward-box">
+      <div class="m-reward-lbl">Prize drawing</div>
+      <div class="m-reward-amt" id="mRewardAmt">For a chance to win $500</div>
+    </div>
+    <button class="m-btn" onclick="dismissModal()">Keep it going →</button>
+  </div>
+</div>
+
+
+<script>
+  // ── Data ──────────────────────────────────────────────────
+  const CAMPAIGN = ['June', 'July', 'August'];
+
+  const TX_TYPES = [
+    { type:'send',    icon:'💸', name:'Send money',         desc:'Pay a friend, split a bill, or send a gift' },
+    { type:'receive', icon:'💰', name:'Receive money',      desc:'Get paid back or accept a payment' },
+    { type:'card',    icon:'💳', name:'Pay with Cash Card', desc:'Use your card in store, online, or at an ATM' },
+    { type:'invest',  icon:'📈', name:'Invest',             desc:'Buy or sell Bitcoin or stocks' },
+    { type:'save',    icon:'🏦', name:'Move to savings',    desc:'Transfer money into your Cash savings' },
+    { type:'deposit', icon:'💵', name:'Direct deposit',     desc:'Receive your paycheck or benefits' },
+  ];
+
+  const MONTH_MILESTONES = [
+    { emoji:'☀️', tag:'June Complete', title:'June done!',       desc:'2 more active months to qualify for the $500 drawing.' },
+    { emoji:'🌊', tag:'July Complete', title:'Halfway there!',   desc:'One more month to qualify for the drawing. Finish strong in August.' },
+    { emoji:'🏆', tag:'Summer Complete',title:'You\'re in!',     desc:'You completed all 3 months. Your entries are locked in for the $500 drawing.' },
+  ];
+
+  // ── State ─────────────────────────────────────────────────
+  let S = {
+    campaignMonth: 1,   // 0=June,1=July(active),2=August
+    entries: [4, 0, 0], // entries per month — June already has 4
+    tappedTypes: new Set(),
+  };
+
+  function monthDone(m)   { return S.entries[m] > 0; }
+  function totalEntries() { return S.entries.reduce((a,b) => a+b, 0); }
+  function streakIntact() {
+    for (let i = 0; i < S.campaignMonth; i++) {
+      if (S.entries[i] === 0) return false;
+    }
+    return true;
+  }
+
+  // ── Render (Money tab module) ──────────────────────────────
+  function render() {
+    const cm = S.campaignMonth;
+    const total = totalEntries();
+
+    // Sun icon
+    const sunEl = document.getElementById('smSun');
+    sunEl.textContent = cm >= 2 && monthDone(2) ? '🏆' : cm >= 1 ? '🌊' : '☀️';
+
+    // Steps
+    let html = '';
+    [0,1,2].forEach((i) => {
+      const isDone   = monthDone(i);
+      const isActive = !isDone && i === cm && streakIntact();
+      const cls      = isDone ? 'done' : isActive ? 'active' : 'locked';
+      const ent      = S.entries[i];
+      const entStr   = isDone ? `${ent} 🎟` : isActive ? '—' : '—';
+      const entCls   = ent > 0 ? 'has-entries' : 'none';
+      const lbl      = CAMPAIGN[i];
+      const icon     = ['☀️','🌊','🏆'][i];
+
+      if (i > 0) html += `<div class="sm-connector ${isDone ? 'done' : 'pending'}"></div>`;
+      html += `<div class="sm-step-col">
+        <div class="sm-step-dot ${cls}">${isDone ? '✓' : icon}</div>
+        <div class="sm-step-lbl ${cls}">${lbl.substring(0,3)}</div>
+        <div class="sm-step-entries ${entCls}">${entStr}</div>
+      </div>`;
+    });
+    document.getElementById('smSteps').innerHTML = html;
+
+    // Entry counter
+    document.getElementById('smEntryNum').textContent = total;
+
+    // CTA
+    const ctaEl = document.getElementById('smActionArea');
+    const subEl = document.getElementById('smCtaSub');
+    const mod   = document.getElementById('streakMod');
+
+    if (!streakIntact()) {
+      ctaEl.innerHTML = `<div style="font-size:12px;font-weight:700;color:#ff5555">Streak broken</div>`;
+      subEl.classList.add('hidden');
+    } else if (cm > 2 || (cm === 2 && monthDone(2))) {
+      ctaEl.innerHTML = `<div style="font-size:13px;font-weight:800;color:var(--sun)">🏆 You're in!</div>`;
+      subEl.classList.add('hidden');
+      mod.style.borderColor = 'var(--sun-hi)';
+    } else {
+      const done = monthDone(cm);
+      const lbl  = done ? `Make another → +1 entry` : `Make a transaction → +1 entry`;
+      ctaEl.innerHTML = `<button class="sm-action-btn" onclick="openTxScreen()">${lbl}</button>`;
+      subEl.classList.remove('hidden');
+      mod.style.borderColor = done ? 'rgba(255,170,0,.38)' : 'var(--sun-mid)';
+    }
+  }
+
+  // ── Render (transaction screen) ───────────────────────────
+  function renderTxScreen() {
+    const cm    = S.campaignMonth;
+    const mEnt  = S.entries[cm];
+    const total = totalEntries();
+
+    // Month label
+    document.getElementById('txMonthLabel').textContent = CAMPAIGN[cm];
+    document.getElementById('txTotalEntries').textContent = `${total} 🎟`;
+
+    // Big entry count
+    const bigEl = document.getElementById('txEntryBig');
+    bigEl.textContent = mEnt;
+
+    // Status text
+    const statusEl = document.getElementById('txEntryStatus');
+    if (mEnt === 0) {
+      statusEl.textContent = 'Make 1 transaction to secure your streak';
+      statusEl.className   = 'tx-entry-status needs';
+    } else {
+      statusEl.textContent = `✓ Streak secured — each extra transaction adds more chances`;
+      statusEl.className   = 'tx-entry-status secured';
+    }
+
+    // Mini streak dots
+    [0,1,2].forEach(i => {
+      const dot = document.getElementById(`txDot${i}`);
+      dot.className = 'tx-streak-dot ' + (monthDone(i) ? 'done' : i === cm ? 'active' : 'locked');
+    });
+    [['txLine01',0],['txLine12',1]].forEach(([id,i]) => {
+      const el = document.getElementById(id);
+      el.className = 'tx-streak-line ' + (monthDone(i) ? 'done' : 'pending');
+    });
+    const lblParts = CAMPAIGN.map((m,i) => {
+      const s = m.substring(0,3);
+      return monthDone(i) ? `${s} ✓` : i === cm ? `<span style="color:var(--sun)">${s}</span>` : s;
+    });
+    document.getElementById('txStreakLbl').innerHTML = lblParts.join(' · ');
+
+    // Transaction list
+    const listEl = document.getElementById('txList');
+    listEl.innerHTML = '';
+    TX_TYPES.forEach(tx => {
+      const tapped = S.tappedTypes.has(tx.type);
+      const item   = document.createElement('div');
+      item.className = `tx-item${tapped ? ' tapped' : ''}`;
+      item.id = `txItem_${tx.type}`;
+      item.innerHTML = `
+        <div class="tx-item-ico">${tx.icon}</div>
+        <div class="tx-item-body">
+          <div class="tx-item-name">${tx.name}</div>
+          <div class="tx-item-desc">${tx.desc}</div>
+        </div>
+        <div class="tx-item-right">
+          <div class="tx-item-arrow">›</div>
+          <div class="tx-item-badge">+1 entry</div>
+        </div>`;
+      item.addEventListener('click', () => tapTx(tx.type));
+      listEl.appendChild(item);
+    });
+  }
+
+  // ── Navigation ────────────────────────────────────────────
+  function openTxScreen() {
+    renderTxScreen();
+    document.getElementById('moneyScreen').classList.add('pushed');
+    document.getElementById('txScreen').classList.add('visible');
+    document.getElementById('txScreen').scrollTop = 0;
+  }
+
+  function closeTxScreen() {
+    document.getElementById('moneyScreen').classList.remove('pushed');
+    document.getElementById('txScreen').classList.remove('visible');
+    render(); // refresh money tab totals
+  }
+
+  // ── Tap a transaction type ────────────────────────────────
+  function tapTx(type) {
+    const cm = S.campaignMonth;
+    S.entries[cm]++;
+    S.tappedTypes.add(type);
+
+    // Animate the big number
+    const bigEl = document.getElementById('txEntryBig');
+    bigEl.textContent = S.entries[cm];
+    bigEl.classList.remove('pop');
+    void bigEl.offsetWidth; // reflow
+    bigEl.classList.add('pop');
+
+    // Float +1 on the item
+    const item = document.getElementById(`txItem_${type}`);
+    if (item) {
+      item.classList.add('tapped');
+      const flash = document.createElement('div');
+      flash.className = 'tx-flash';
+      flash.textContent = '+1 entry';
+      item.appendChild(flash);
+      setTimeout(() => flash.remove(), 800);
+    }
+
+    // Update rest of screen
+    renderTxScreen();
+  }
+
+  // ── Advance month (demo control) ──────────────────────────
+  function advanceMonth() {
+    const cm = S.campaignMonth;
+    if (cm >= 2 && monthDone(2)) { toast('🏆 Campaign complete — you\'re in the drawing!'); return; }
+
+    if (!monthDone(cm)) {
+      toast(`😬 No activity in ${CAMPAIGN[cm]} — streak broken`);
+      S.campaignMonth = Math.min(cm + 1, 2);
+      S.tappedTypes.clear();
+      render();
+      return;
+    }
+
+    const milestone      = MONTH_MILESTONES[cm];
+    const entriesThisMon = S.entries[cm];
+    S.campaignMonth      = Math.min(cm + 1, 2);
+    S.tappedTypes.clear();
+
+    render();
+    setTimeout(() => { launchConfetti(); showModal(milestone, entriesThisMon); }, 320);
+  }
+
+  function resetAll() {
+    S = { campaignMonth: 0, entries: [0,0,0], tappedTypes: new Set() };
+    toast('↺ Reset to start of campaign (June)');
+    render();
+  }
+
+  // ── Toast ─────────────────────────────────────────────────
+  let _tt;
+  function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg; el.classList.add('on');
+    clearTimeout(_tt); _tt = setTimeout(() => el.classList.remove('on'), 2800);
+  }
+
+  // ── Modal ─────────────────────────────────────────────────
+  function showModal(m, entriesThisMonth) {
+    document.getElementById('mEmoji').textContent    = m.emoji;
+    document.getElementById('mTag').textContent      = m.tag;
+    document.getElementById('mTitle').textContent    = m.title;
+    document.getElementById('mDesc').textContent     = m.desc;
+    document.getElementById('mEntriesNum').textContent = `${entriesThisMonth} 🎟`;
+    document.getElementById('mRewardAmt').textContent  =
+      S.campaignMonth >= 3 ? 'You\'re entered to win $500!' : 'For a chance to win $500';
+    document.getElementById('overlay').classList.add('on');
+  }
+
+  function dismissModal() {
+    document.getElementById('overlay').classList.remove('on');
+    toast(`🎟 ${totalEntries()} total entries — keep going!`);
+  }
+
+  // ── Confetti ──────────────────────────────────────────────
+  function launchConfetti() {
+    const wrap = document.getElementById('confetti');
+    wrap.innerHTML = '';
+    const colors = ['#FFAA00','#FF6B35','#FFD700','#fff','#00D632','#FF8C00'];
+    for (let i = 0; i < 70; i++) {
+      const p = document.createElement('div');
+      p.className = 'cp';
+      p.style.cssText = `left:${Math.random()*100}%;background:${colors[~~(Math.random()*colors.length)]};animation-duration:${.9+Math.random()*1.4}s;animation-delay:${Math.random()*.4}s;border-radius:${Math.random()>.5?'50%':'2px'};width:${6+Math.random()*6}px;height:${6+Math.random()*6}px;`;
+      wrap.appendChild(p);
+    }
+    setTimeout(() => { wrap.innerHTML = ''; }, 3200);
+  }
+
+  // ── Clock ─────────────────────────────────────────────────
+  function tick() {
+    const d = new Date();
+    const t = d.getHours() + ':' + String(d.getMinutes()).padStart(2,'0');
+    document.getElementById('clock').textContent  = t;
+    document.getElementById('clock2').textContent = t;
+  }
+  tick(); setInterval(tick, 30000);
+
+  render();
+</script>
+</body>
+</html>
