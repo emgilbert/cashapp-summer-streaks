@@ -96,10 +96,11 @@
     .sm-eyebrow { font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--sun);margin-bottom:1px; }
     .sm-headline { font-size:16px;font-weight:800;letter-spacing:-.3px; }
 
-    .sm-prize { background:var(--sun-dim);border:1px solid var(--sun-mid);border-radius:10px;padding:9px 12px;margin-bottom:14px;display:flex;align-items:baseline;gap:6px; }
+    .sm-prize { background:var(--sun-dim);border:1px solid var(--sun-mid);border-radius:10px;padding:9px 12px;margin-bottom:14px;display:flex;flex-direction:column;gap:3px; }
+    .sm-prize-top { display:flex;align-items:baseline;gap:6px; }
     .sm-prize-label { font-size:11px;font-weight:600;color:var(--t2); }
     .sm-prize-amt { font-size:22px;font-weight:900;letter-spacing:-.5px;background:linear-gradient(90deg,var(--sun),var(--coral));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
-    .sm-prize-sub { font-size:11px;color:var(--t2);margin-left:auto;flex-shrink:0; }
+    .sm-prize-sub { font-size:11px;color:var(--t2); }
 
     .sm-steps { display:flex;align-items:flex-start;margin-bottom:12px; }
     .sm-step-col { display:flex;flex-direction:column;align-items:center;gap:4px; }
@@ -217,15 +218,18 @@
     .tx-nav-pill { background:var(--sun-dim);border:1px solid var(--sun-mid);border-radius:100px;padding:4px 10px;font-size:10px;font-weight:700;color:var(--sun); }
     .tx-month-card { margin:0 14px 20px;background:linear-gradient(145deg,#1c1100,#150d00);border:1px solid var(--sun-mid);border-radius:20px;padding:18px;position:relative;overflow:hidden; }
     .tx-month-card::after { content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;background:radial-gradient(circle,rgba(255,170,0,.10) 0%,transparent 65%);pointer-events:none; }
-    .tx-month-top { display:flex;align-items:center;justify-content:space-between;margin-bottom:12px; }
-    .tx-month-label { font-size:12px;font-weight:700;color:var(--sun);text-transform:uppercase;letter-spacing:1px; }
-    .tx-month-name { font-size:18px;font-weight:900;letter-spacing:-.5px;color:#fff; }
-    .tx-entry-display { display:flex;align-items:baseline;gap:8px;margin-bottom:8px; }
-    .tx-entry-big { font-size:48px;font-weight:900;letter-spacing:-2px;line-height:1;transition:all .2s;color:#fff; }
-    .tx-entry-big.pop { animation:entryPop .3s cubic-bezier(.34,1.56,.64,1); }
-    @keyframes entryPop { 0%{transform:scale(1)}50%{transform:scale(1.2)}100%{transform:scale(1)} }
-    .tx-entry-unit { font-size:16px;font-weight:600;color:var(--t2);padding-bottom:6px; }
-    .tx-entry-status { font-size:13px;font-weight:600;min-height:18px;transition:all .3s; }
+    .tx-total-row { display:flex;align-items:center;justify-content:space-between;margin-bottom:16px; }
+    .tx-total-lbl { font-size:11px;font-weight:600;color:var(--t2);margin-bottom:3px; }
+    .tx-total-num { font-size:36px;font-weight:900;letter-spacing:-1px;color:var(--sun);line-height:1; }
+    .tx-month-breakdown { display:flex;align-items:stretch;background:rgba(0,0,0,.2);border-radius:12px;margin-bottom:14px;overflow:hidden; }
+    .tx-mb-col { flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 0;gap:4px; }
+    .tx-mb-col.active { background:rgba(255,170,0,.08); }
+    .tx-mb-month { font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.6px; }
+    .tx-mb-num { font-size:20px;font-weight:900;color:var(--t3); }
+    .tx-mb-num.has-entries { color:var(--sun); }
+    .tx-mb-num.active-month { color:#fff; }
+    .tx-mb-divider { width:1px;background:rgba(255,255,255,.06);margin:8px 0; }
+    .tx-entry-status { font-size:12px;font-weight:600;min-height:18px;transition:all .3s;text-align:right;max-width:140px;line-height:1.3; }
     .tx-entry-status.secured { color:var(--green); }
     .tx-entry-status.needs   { color:var(--t2); }
     .tx-streak-mini { display:flex;align-items:center;gap:6px;margin-top:14px; }
@@ -309,8 +313,10 @@
               </div>
             </div>
             <div class="sm-prize">
-              <span class="sm-prize-label">For a chance to win</span>
-              <span class="sm-prize-amt">$1,000</span>
+              <div class="sm-prize-top">
+                <span class="sm-prize-label">For a chance to win</span>
+                <span class="sm-prize-amt">$1,000</span>
+              </div>
               <span class="sm-prize-sub">Send, spend, or save each month to enter</span>
             </div>
             <div class="sm-steps" id="smSteps"></div>
@@ -385,29 +391,30 @@
           </div>
 
           <div class="tx-month-card">
-            <div class="tx-month-top">
+            <!-- Total entries hero -->
+            <div class="tx-total-row">
               <div>
-                <div class="tx-month-label" id="txMonthLabel">July</div>
-                <div class="tx-month-name">Your entries</div>
+                <div class="tx-total-lbl">Total entries</div>
+                <div class="tx-total-num" id="txTotalEntries">4 🔥</div>
               </div>
-              <div style="text-align:right">
-                <div style="font-size:10px;font-weight:600;color:var(--t2);margin-bottom:3px">Total entries</div>
-                <div style="font-size:18px;font-weight:900;color:var(--sun)" id="txTotalEntries">4 🔥</div>
+              <div class="tx-entry-status needs" id="txEntryStatus">Make 1 transaction to secure your streak</div>
+            </div>
+            <!-- Per-month breakdown -->
+            <div class="tx-month-breakdown">
+              <div class="tx-mb-col" id="txMbCol0">
+                <div class="tx-mb-month">Jun</div>
+                <div class="tx-mb-num" id="txMbNum0">—</div>
               </div>
-            </div>
-            <div class="tx-entry-display">
-              <div class="tx-entry-big" id="txEntryBig">0</div>
-              <div class="tx-entry-unit">this month</div>
-            </div>
-            <div class="tx-entry-status needs" id="txEntryStatus">Make 1 transaction to secure your streak</div>
-            <div class="tx-streak-mini" style="margin-top:14px">
-              <div class="tx-streak-dot" id="txDot0"></div>
-              <div class="tx-streak-line" id="txLine01"></div>
-              <div class="tx-streak-dot" id="txDot1"></div>
-              <div class="tx-streak-line" id="txLine12"></div>
-              <div class="tx-streak-dot" id="txDot2"></div>
-              <div style="width:8px"></div>
-              <div class="tx-streak-lbl" id="txStreakLbl">Jun ✓ · Jul · Aug</div>
+              <div class="tx-mb-divider"></div>
+              <div class="tx-mb-col" id="txMbCol1">
+                <div class="tx-mb-month">Jul</div>
+                <div class="tx-mb-num" id="txMbNum1">—</div>
+              </div>
+              <div class="tx-mb-divider"></div>
+              <div class="tx-mb-col" id="txMbCol2">
+                <div class="tx-mb-month">Aug</div>
+                <div class="tx-mb-num" id="txMbNum2">—</div>
+              </div>
             </div>
           </div>
 
@@ -543,29 +550,35 @@
   function renderTxScreen() {
     const cm   = S.campaignMonth;
     const mEnt = S.entries[cm];
-    document.getElementById('txMonthLabel').textContent   = CAMPAIGN[cm];
     document.getElementById('txTotalEntries').textContent = `${totalEntries()} 🔥`;
-    document.getElementById('txEntryBig').textContent     = mEnt;
+
+    // Per-month breakdown
+    [0,1,2].forEach(i => {
+      const col = document.getElementById(`txMbCol${i}`);
+      const num = document.getElementById(`txMbNum${i}`);
+      const ent = S.entries[i];
+      const isPast   = i < cm;
+      const isActive = i === cm;
+      const isFuture = i > cm;
+      col.className = 'tx-mb-col' + (isActive ? ' active' : '');
+      if (isFuture) {
+        num.textContent = '—';
+        num.className = 'tx-mb-num';
+      } else if (ent === 0) {
+        num.textContent = '0';
+        num.className = 'tx-mb-num' + (isActive ? ' active-month' : '');
+      } else {
+        num.textContent = `${ent} 🔥`;
+        num.className = 'tx-mb-num has-entries' + (isActive ? ' active-month' : '');
+      }
+    });
 
     const statusEl = document.getElementById('txEntryStatus');
     statusEl.textContent = mEnt === 0
       ? 'Make 1 transaction to secure your streak'
-      : '✓ Streak secured — each extra transaction adds more chances';
+      : '✓ Streak secured — more transactions = better odds';
     statusEl.className = 'tx-entry-status ' + (mEnt === 0 ? 'needs' : 'secured');
 
-    [0,1,2].forEach(i => {
-      document.getElementById(`txDot${i}`).className =
-        'tx-streak-dot ' + (monthDone(i) ? 'done' : i === cm ? 'active' : 'locked');
-    });
-    [['txLine01',0],['txLine12',1]].forEach(([id,i]) => {
-      document.getElementById(id).className = 'tx-streak-line ' + (monthDone(i) ? 'done' : 'pending');
-    });
-    document.getElementById('txStreakLbl').innerHTML =
-      CAMPAIGN.map((m,i) => {
-        const s = m.substring(0,3);
-        return monthDone(i) ? `${s} ✓` : i === cm
-          ? `<span style="color:var(--sun)">${s}</span>` : s;
-      }).join(' · ');
 
     const listEl = document.getElementById('txList');
     listEl.innerHTML = '';
@@ -607,11 +620,20 @@
     S.entries[cm]++;
     S.tappedTypes.add(type);
 
-    const bigEl = document.getElementById('txEntryBig');
-    bigEl.textContent = S.entries[cm];
-    bigEl.classList.remove('pop');
-    void bigEl.offsetWidth;
-    bigEl.classList.add('pop');
+    // Animate total entries
+    const totalEl = document.getElementById('txTotalEntries');
+    totalEl.textContent = `${totalEntries()} 🔥`;
+    totalEl.style.transform = 'scale(1.18)';
+    setTimeout(() => { totalEl.style.transition = 'transform .25s cubic-bezier(.34,1.56,.64,1)'; totalEl.style.transform = 'scale(1)'; }, 50);
+
+    // Update active month column
+    const numEl = document.getElementById(`txMbNum${cm}`);
+    if (numEl) {
+      numEl.textContent = `${S.entries[cm]} 🔥`;
+      numEl.className = 'tx-mb-num has-entries active-month';
+      numEl.style.transform = 'scale(1.2)';
+      setTimeout(() => { numEl.style.transition = 'transform .2s'; numEl.style.transform = 'scale(1)'; }, 50);
+    }
 
     const item = document.getElementById(`txItem_${type}`);
     if (item) {
