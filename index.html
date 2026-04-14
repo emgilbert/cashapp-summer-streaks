@@ -209,42 +209,30 @@
     .m-btn:active { opacity:.85; }
 
     /* ════════════════════════════════════════════
-       EMAIL SCREEN
+       EMAIL PREVIEWS — standalone templates
     ════════════════════════════════════════════ */
-    .email-screen {
-      position:absolute;inset:0;
-      background:#1a1a1a;overflow-y:auto;scrollbar-width:none;border-radius:46px;
-      transform:translateX(100%);
-      transition:transform .35s cubic-bezier(.4,0,.2,1);
-      will-change:transform;z-index:50;
-    }
-    .email-screen::-webkit-scrollbar { display:none; }
-    .email-screen.visible { transform:translateX(0); }
+    .emails-section { display:flex;gap:32px;align-items:flex-start;margin-top:40px;flex-wrap:wrap;justify-content:center; }
+    .email-card { width:375px;border-radius:4px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.45);flex-shrink:0; }
+    .ep-meta { background:#1e1e1e;padding:12px 16px;border-bottom:1px solid #2a2a2a; }
+    .ep-tag { font-size:9px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:#555;margin-bottom:8px; }
+    .ep-subject { font-size:14px;font-weight:700;color:#fff;line-height:1.3;margin-bottom:8px; }
+    .ep-sender-row { display:flex;align-items:center;gap:8px; }
+    .ep-avatar { width:26px;height:26px;border-radius:50%;background:#00D632;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#000;flex-shrink:0; }
+    .ep-from-name { font-size:12px;font-weight:600;color:#aaa; }
+    .ep-from-addr { font-size:10px;color:#555; }
+    .ep-timestamp { font-size:10px;color:#555;margin-left:auto; }
 
-    /* Mail app chrome */
-    .mail-nav { display:flex;align-items:center;justify-content:space-between;padding:8px 16px 6px; }
-    .mail-back { display:flex;align-items:center;gap:3px;color:#007AFF;font-size:15px;font-weight:400;background:none;border:none;font-family:inherit;cursor:pointer; }
-    .mail-actions { display:flex;gap:18px;align-items:center; }
-    .mail-action-ico { font-size:18px;color:#888; }
-    .mail-subject-row { padding:0 18px 10px; }
-    .mail-subject { font-size:20px;font-weight:700;color:#fff;line-height:1.2;margin-bottom:8px; }
-    .mail-sender-row { display:flex;align-items:center;gap:10px;margin-bottom:4px; }
-    .mail-avatar { width:34px;height:34px;border-radius:50%;background:#00D632;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#000;flex-shrink:0; }
-    .mail-from { flex:1; }
-    .mail-from-name { font-size:14px;font-weight:600;color:#fff; }
-    .mail-from-addr { font-size:11px;color:#666; }
-    .mail-timestamp { font-size:11px;color:#666; }
-    .mail-divider { height:1px;background:rgba(255,255,255,.08);margin:0 0 0; }
-
-    /* Email body rendered in white card */
-    .email-body-wrap { background:#f4f4f4;margin:0;border-radius:0 0 46px 46px;padding-bottom:40px; }
-    .email-body { background:#fff;max-width:100%;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif; }
+    /* Email body */
+    .email-body-wrap { background:#f4f4f4;padding-bottom:0; }
+    .email-body { background:#fff;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif; }
 
     /* Cash App email header */
-    .em-header { background:#000;padding:16px 20px;text-align:center; }
+    .em-header { background:#000;padding:14px 20px 12px;display:flex;align-items:center;justify-content:space-between; }
     .em-logo { display:inline-flex;align-items:center;gap:8px; }
-    .em-logo-mark { width:28px;height:28px;background:#00D632;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#000; }
-    .em-logo-text { font-size:17px;font-weight:800;color:#fff;letter-spacing:-.2px; }
+    .em-logo-mark { width:30px;height:30px;background:#00D632;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:900;color:#000; }
+    .em-logo-text { font-size:16px;font-weight:800;color:#fff;letter-spacing:-.2px; }
+    .em-header-icons { display:flex;gap:14px;align-items:center; }
+    .em-header-ico { font-size:16px;color:#555; }
 
     /* ── SUMMER STREAKS BANNER ── */
     .em-streak-banner {
@@ -276,18 +264,22 @@
     .em-banner-cta { display:block;width:100%;background:linear-gradient(135deg,#FFAA00,#FF6B35);color:#fff;border:none;border-radius:100px;padding:13px;font-size:14px;font-weight:800;text-align:center;cursor:pointer;font-family:inherit;letter-spacing:-.1px;box-shadow:0 4px 14px rgba(255,170,0,.3); }
 
     /* Email body content */
-    .em-section { padding:22px 20px;border-bottom:1px solid #eee; }
-    .em-section:last-child { border-bottom:none; }
-    .em-section-hed { font-size:17px;font-weight:800;color:#111;line-height:1.3;margin-bottom:8px; }
-    .em-section-body { font-size:14px;color:#555;line-height:1.6;margin-bottom:14px; }
-    .em-section-cta { display:block;width:100%;background:#00D632;color:#000;border:none;border-radius:100px;padding:13px;font-size:14px;font-weight:800;text-align:center;cursor:pointer;font-family:inherit; }
-    .em-reward-row { display:flex;gap:10px;margin-bottom:14px; }
-    .em-reward-item { flex:1;background:#f9f9f9;border-radius:12px;padding:12px;text-align:center; }
-    .em-reward-icon { font-size:22px;margin-bottom:4px; }
-    .em-reward-month { font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#999;margin-bottom:2px; }
-    .em-reward-val { font-size:13px;font-weight:800;color:#111; }
-    .em-footer { background:#f4f4f4;padding:20px;text-align:center; }
-    .em-footer p { font-size:10px;color:#aaa;line-height:1.5;margin-bottom:6px; }
+    .em-hero-img { width:100%;overflow:hidden; }
+    .em-section { padding:24px 22px; }
+    .em-section + .em-section { border-top:1px solid #eee; }
+    .em-section-hed { font-size:22px;font-weight:800;color:#000;line-height:1.25;margin-bottom:10px;letter-spacing:-.3px; }
+    .em-section-body { font-size:14px;color:#444;line-height:1.65;margin-bottom:20px; }
+    .em-section-cta { display:block;width:100%;background:#00D632;color:#000;border:none;border-radius:6px;padding:15px;font-size:15px;font-weight:800;text-align:center;cursor:pointer;font-family:inherit;letter-spacing:-.1px; }
+    .em-feature-list { list-style:none;padding:0;margin:0 0 20px; }
+    .em-feature-list li { display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid #f0f0f0; }
+    .em-feature-list li:last-child { border-bottom:none; }
+    .em-feat-icon { width:32px;height:32px;border-radius:50%;background:#00D632;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-top:1px; }
+    .em-feat-body { flex:1; }
+    .em-feat-title { font-size:14px;font-weight:700;color:#000;margin-bottom:2px; }
+    .em-feat-desc { font-size:12px;color:#666;line-height:1.4; }
+    .em-divider { height:1px;background:#eee;margin:0; }
+    .em-footer { background:#f4f4f4;padding:20px 22px;text-align:center; }
+    .em-footer p { font-size:10px;color:#aaa;line-height:1.6;margin-bottom:4px; }
     .em-footer a { color:#00D632;text-decoration:none; }
 
     /* ════════════════════════════════════════════
@@ -518,110 +510,6 @@
       </div><!-- /txScreen -->
 
 
-      <!-- ══ SCREEN 3: Email ══ -->
-      <div class="email-screen" id="emailScreen">
-
-        <div class="status-bar" style="color:#fff">
-          <span id="clock3">9:41</span>
-          <div class="sb-icons"><span>▲▲▲</span><span style="font-size:14px">WiFi</span><span>🔋</span></div>
-        </div>
-
-        <div class="mail-nav">
-          <button class="mail-back" onclick="closeEmailScreen()">‹ Inbox</button>
-          <div class="mail-actions">
-            <span class="mail-action-ico">🗂</span>
-            <span class="mail-action-ico">🗑</span>
-            <span class="mail-action-ico">↩</span>
-          </div>
-        </div>
-
-        <div class="mail-subject-row">
-          <div class="mail-subject">☀️ Your streak is heating up — don't break it</div>
-          <div class="mail-sender-row">
-            <div class="mail-avatar">$</div>
-            <div class="mail-from">
-              <div class="mail-from-name">Cash App</div>
-              <div class="mail-from-addr">no-reply@cash.app</div>
-            </div>
-            <div class="mail-timestamp">10:14 AM</div>
-          </div>
-        </div>
-
-        <div class="mail-divider"></div>
-
-        <!-- Rendered email body -->
-        <div class="email-body-wrap">
-          <div class="email-body">
-
-            <!-- Cash App header -->
-            <div class="em-header">
-              <div class="em-logo">
-                <div class="em-logo-mark">$</div>
-                <div class="em-logo-text">Cash App</div>
-              </div>
-            </div>
-
-            <!-- ★ Summer Streaks banner ★ -->
-            <div class="em-streak-banner">
-              <div class="em-banner-eyebrow">☀️ Summer Streaks — Limited campaign</div>
-              <div class="em-banner-headline">June is locked in.<br>Keep your streak alive.</div>
-              <div class="em-banner-sub">You're 2 months away from "Streak Safe" status — and a chance to win $1,000. Send, spend, or save in July to stay on track.</div>
-
-              <!-- Progress dots -->
-              <div class="em-banner-progress">
-                <div class="em-bp-dot done">✓</div>
-                <div class="em-bp-line done"></div>
-                <div class="em-bp-dot active">🌊</div>
-                <div class="em-bp-line pending"></div>
-                <div class="em-bp-dot locked">🏆</div>
-              </div>
-              <div class="em-bp-labels">
-                <div class="em-bp-lbl done">Jun</div>
-                <div style="flex:1"></div>
-                <div class="em-bp-lbl active">Jul</div>
-                <div style="flex:1"></div>
-                <div class="em-bp-lbl locked">Aug</div>
-              </div>
-
-              <button class="em-banner-cta">Earn your July entries →</button>
-            </div>
-
-            <!-- Reward ladder section -->
-            <div class="em-section">
-              <div class="em-section-hed">Complete all 3 months to unlock every reward</div>
-              <div class="em-reward-row">
-                <div class="em-reward-item">
-                  <div class="em-reward-icon">☀️</div>
-                  <div class="em-reward-month">June</div>
-                  <div class="em-reward-val" style="color:#00D632">$2.50 ✓</div>
-                </div>
-                <div class="em-reward-item">
-                  <div class="em-reward-icon">🌊</div>
-                  <div class="em-reward-month">July</div>
-                  <div class="em-reward-val">$2.50 + Status</div>
-                </div>
-                <div class="em-reward-item">
-                  <div class="em-reward-icon">🏆</div>
-                  <div class="em-reward-month">August</div>
-                  <div class="em-reward-val">$5 + Streak Safe</div>
-                </div>
-              </div>
-              <div class="em-section-body">Users who complete all 3 months see churn drop from 18.7% to 7.4% by month 6. The streak is just the start.</div>
-              <button class="em-section-cta">Open Cash App</button>
-            </div>
-
-            <!-- Footer -->
-            <div class="em-footer">
-              <p>You're receiving this because you're a Cash App customer.<br>
-              <a href="#">Unsubscribe</a> · <a href="#">Privacy Policy</a> · <a href="#">Help</a></p>
-              <p>Cash App, 1455 Market St, San Francisco, CA 94103</p>
-            </div>
-
-          </div>
-        </div>
-
-      </div><!-- /emailScreen -->
-
     </div>
   </div>
 </div>
@@ -634,10 +522,217 @@
     <button class="dbtn" onclick="advanceMonth()">⏩ Advance month</button>
     <button class="dbtn r" onclick="resetAll()">↺ Reset all</button>
   </div>
-  <div class="demo-row">
-    <button class="dbtn" onclick="openEmailScreen()">📧 Preview CRM email</button>
-  </div>
 </div>
+
+
+<!-- ══ EMAIL PREVIEWS ══ -->
+<div style="margin-top:48px;text-align:center;">
+  <div class="proto-label">CRM Emails</div>
+</div>
+
+<div class="emails-section">
+
+  <!-- Email 1: July check-in -->
+  <div class="email-card">
+    <div class="ep-meta">
+      <div class="ep-tag">Triggered: July 1 · Monthly check-in</div>
+      <div class="ep-subject">Your Summer Streaks update: June ✓ — July starts now</div>
+      <div class="ep-sender-row">
+        <div class="ep-avatar">$</div>
+        <div>
+          <div class="ep-from-name">Cash App &lt;no-reply@cash.app&gt;</div>
+        </div>
+        <div class="ep-timestamp">Jul 1, 9:00 AM</div>
+      </div>
+    </div>
+    <div class="email-body-wrap">
+      <div class="email-body">
+        <div class="em-header">
+          <div class="em-logo"><div class="em-logo-mark">$</div><div class="em-logo-text">Cash App</div></div>
+          <div class="em-header-icons"><span class="em-header-ico">↗</span><span class="em-header-ico">⋯</span></div>
+        </div>
+        <div class="em-hero-img" style="height:auto;background:#0C0C0C;padding:0;">
+          <svg width="100%" viewBox="0 0 375 200" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+            <rect width="375" height="200" fill="#0C0C0C"/>
+            <defs>
+              <radialGradient id="glowGreen" cx="80%" cy="20%" r="55%">
+                <stop offset="0%" stop-color="#00E013" stop-opacity="0.13"/>
+                <stop offset="100%" stop-color="#00E013" stop-opacity="0"/>
+              </radialGradient>
+              <radialGradient id="glowAmber" cx="18%" cy="85%" r="45%">
+                <stop offset="0%" stop-color="#FFAA00" stop-opacity="0.10"/>
+                <stop offset="100%" stop-color="#FFAA00" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <rect width="375" height="200" fill="url(#glowGreen)"/>
+            <rect width="375" height="200" fill="url(#glowAmber)"/>
+            <line x1="28" y1="155" x2="347" y2="155" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1"/>
+            <line x1="62" y1="130" x2="168" y2="130" stroke="#00E013" stroke-width="2" stroke-opacity="0.5"/>
+            <line x1="207" y1="130" x2="313" y2="130" stroke="#ffffff" stroke-width="2" stroke-opacity="0.12" stroke-dasharray="4 3"/>
+            <circle cx="44" cy="130" r="14" fill="#00E013"/>
+            <text x="44" y="135" text-anchor="middle" font-family="-apple-system,Helvetica Neue,Arial,sans-serif" font-weight="900" font-size="13" fill="#000">✓</text>
+            <text x="44" y="152" text-anchor="middle" font-family="-apple-system,Helvetica Neue,Arial,sans-serif" font-weight="700" font-size="9" fill="#00E013" letter-spacing="0.6">JUN</text>
+            <circle cx="187" cy="130" r="14" fill="none" stroke="#FFAA00" stroke-width="2"/>
+            <circle cx="187" cy="130" r="9" fill="#FFAA00" fill-opacity="0.15"/>
+            <text x="187" y="135" text-anchor="middle" font-family="-apple-system,Helvetica Neue,Arial,sans-serif" font-size="13">🌊</text>
+            <text x="187" y="152" text-anchor="middle" font-family="-apple-system,Helvetica Neue,Arial,sans-serif" font-weight="700" font-size="9" fill="#FFAA00" letter-spacing="0.6">JUL</text>
+            <circle cx="331" cy="130" r="14" fill="none" stroke="#2a2a2a" stroke-width="2"/>
+            <text x="331" y="135" text-anchor="middle" font-family="-apple-system,Helvetica Neue,Arial,sans-serif" font-size="11" fill="#333">🏆</text>
+            <text x="331" y="152" text-anchor="middle" font-family="-apple-system,Helvetica Neue,Arial,sans-serif" font-weight="700" font-size="9" fill="#333" letter-spacing="0.6">AUG</text>
+            <text x="28" y="68" font-family="-apple-system,Helvetica Neue,Arial,sans-serif" font-weight="900" font-size="52" fill="#ffffff" letter-spacing="-2" opacity="0.97">MONTH 2</text>
+            <text x="29" y="92" font-family="-apple-system,Helvetica Neue,Arial,sans-serif" font-weight="700" font-size="13" fill="#00E013" letter-spacing="2.5">OF 3 — STREAK ALIVE</text>
+          </svg>
+        </div>
+        <div class="em-section">
+          <div class="em-section-hed">You're on a roll. Here's your July update.</div>
+          <div class="em-section-body">You completed June and locked in your first entries. Two months left — keep it going and you'll hit Streak Safe status with a chance to win $1,000.</div>
+        </div>
+        <div class="em-divider"></div>
+        <div class="em-streak-banner" style="margin:0;border-radius:0;border-left:none;border-right:none;border-top:none;">
+          <div class="em-banner-eyebrow">☀️ Summer Streaks — Your progress</div>
+          <div class="em-banner-progress" style="margin-bottom:6px;">
+            <div class="em-bp-dot done">✓</div><div class="em-bp-line done"></div>
+            <div class="em-bp-dot active">🌊</div><div class="em-bp-line pending"></div>
+            <div class="em-bp-dot locked">🏆</div>
+          </div>
+          <div class="em-bp-labels" style="margin-bottom:16px;">
+            <div class="em-bp-lbl done">Jun</div><div style="flex:1"></div>
+            <div class="em-bp-lbl active">Jul</div><div style="flex:1"></div>
+            <div class="em-bp-lbl locked">Aug</div>
+          </div>
+          <button class="em-banner-cta">Earn your July entries →</button>
+        </div>
+        <div class="em-divider"></div>
+        <div class="em-section">
+          <div class="em-section-hed">Month-by-month breakdown</div>
+          <ul class="em-feature-list">
+            <li>
+              <div class="em-feat-icon" style="background:#00D632;color:#000;font-weight:900;font-size:13px;">✓</div>
+              <div class="em-feat-body"><div class="em-feat-title">June — Complete</div><div class="em-feat-desc">4 entries locked in for the $1,000 drawing.</div></div>
+            </li>
+            <li>
+              <div class="em-feat-icon" style="background:#fff;border:2px solid #FFAA00;font-size:13px;">🌊</div>
+              <div class="em-feat-body"><div class="em-feat-title">July — In progress</div><div class="em-feat-desc">Make at least one transaction before July 31 to stay in the streak.</div></div>
+            </li>
+            <li>
+              <div class="em-feat-icon" style="background:#f0f0f0;font-size:13px;color:#bbb;">🔒</div>
+              <div class="em-feat-body"><div class="em-feat-title" style="color:#999;">August — Locked</div><div class="em-feat-desc">Complete July to unlock. Streak Safe badge + more entries up for grabs.</div></div>
+            </li>
+          </ul>
+          <button class="em-section-cta">View my streak</button>
+        </div>
+        <div class="em-divider"></div>
+        <div class="em-section">
+          <div class="em-section-hed">What to know before you transact</div>
+          <ul class="em-feature-list">
+            <li><div class="em-feat-icon">💸</div><div class="em-feat-body"><div class="em-feat-title">Send or receive money</div><div class="em-feat-desc">Pay a friend, split a bill, or accept a payment.</div></div></li>
+            <li><div class="em-feat-icon">💳</div><div class="em-feat-body"><div class="em-feat-title">Pay with your Cash Card</div><div class="em-feat-desc">In store, online, or at an ATM.</div></div></li>
+            <li><div class="em-feat-icon">📈</div><div class="em-feat-body"><div class="em-feat-title">Invest or move to savings</div><div class="em-feat-desc">Buy Bitcoin, stocks, or transfer to your Cash savings.</div></div></li>
+          </ul>
+        </div>
+        <div class="em-footer">
+          <p>You're receiving this because you're a Cash App customer.</p>
+          <p><a href="#">Unsubscribe</a> · <a href="#">Privacy Policy</a> · <a href="#">Help</a></p>
+          <p>Cash App, 1455 Market St, San Francisco, CA 94103</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Email 2: At-risk -->
+  <div class="email-card">
+    <div class="ep-meta">
+      <div class="ep-tag">Triggered: 3 days before month end · No transaction yet</div>
+      <div class="ep-subject">3 days left to keep your streak alive</div>
+      <div class="ep-sender-row">
+        <div class="ep-avatar">$</div>
+        <div>
+          <div class="ep-from-name">Cash App &lt;no-reply@cash.app&gt;</div>
+        </div>
+        <div class="ep-timestamp">Jul 28, 9:00 AM</div>
+      </div>
+    </div>
+    <div class="email-body-wrap">
+      <div class="email-body">
+        <div class="em-header">
+          <div class="em-logo"><div class="em-logo-mark">$</div><div class="em-logo-text">Cash App</div></div>
+          <div class="em-header-icons"><span class="em-header-ico">↗</span><span class="em-header-ico">⋯</span></div>
+        </div>
+        <div class="em-hero-img" style="height:auto;background:#0C0C0C;padding:0;">
+          <svg width="100%" viewBox="0 0 375 200" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+            <rect width="375" height="200" fill="#0C0C0C"/>
+            <defs>
+              <radialGradient id="glowCoral" cx="75%" cy="25%" r="55%">
+                <stop offset="0%" stop-color="#FF6B35" stop-opacity="0.18"/>
+                <stop offset="100%" stop-color="#FF6B35" stop-opacity="0"/>
+              </radialGradient>
+              <radialGradient id="glowAmber2" cx="20%" cy="80%" r="45%">
+                <stop offset="0%" stop-color="#FFAA00" stop-opacity="0.10"/>
+                <stop offset="100%" stop-color="#FFAA00" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <rect width="375" height="200" fill="url(#glowCoral)"/>
+            <rect width="375" height="200" fill="url(#glowAmber2)"/>
+            <line x1="28" y1="155" x2="347" y2="155" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1"/>
+            <line x1="62" y1="130" x2="168" y2="130" stroke="#00E013" stroke-width="2" stroke-opacity="0.5"/>
+            <line x1="207" y1="130" x2="313" y2="130" stroke="#ffffff" stroke-width="2" stroke-opacity="0.12" stroke-dasharray="4 3"/>
+            <circle cx="44" cy="130" r="14" fill="#00E013"/>
+            <text x="44" y="135" text-anchor="middle" font-family="-apple-system,Helvetica Neue,Arial,sans-serif" font-weight="900" font-size="13" fill="#000">✓</text>
+            <text x="44" y="152" text-anchor="middle" font-family="-apple-system,Helvetica Neue,Arial,sans-serif" font-weight="700" font-size="9" fill="#00E013" letter-spacing="0.6">JUN</text>
+            <circle cx="187" cy="130" r="14" fill="none" stroke="#FF6B35" stroke-width="2"/>
+            <circle cx="187" cy="130" r="18" fill="none" stroke="#FF6B35" stroke-width="1" stroke-opacity="0.3"/>
+            <circle cx="187" cy="130" r="9" fill="#FF6B35" fill-opacity="0.12"/>
+            <text x="187" y="135" text-anchor="middle" font-family="-apple-system,Helvetica Neue,Arial,sans-serif" font-size="13">⚠️</text>
+            <text x="187" y="152" text-anchor="middle" font-family="-apple-system,Helvetica Neue,Arial,sans-serif" font-weight="700" font-size="9" fill="#FF6B35" letter-spacing="0.6">JUL</text>
+            <circle cx="331" cy="130" r="14" fill="none" stroke="#2a2a2a" stroke-width="2"/>
+            <text x="331" y="135" text-anchor="middle" font-family="-apple-system,Helvetica Neue,Arial,sans-serif" font-size="11" fill="#333">🏆</text>
+            <text x="331" y="152" text-anchor="middle" font-family="-apple-system,Helvetica Neue,Arial,sans-serif" font-weight="700" font-size="9" fill="#333" letter-spacing="0.6">AUG</text>
+            <text x="28" y="68" font-family="-apple-system,Helvetica Neue,Arial,sans-serif" font-weight="900" font-size="52" fill="#ffffff" letter-spacing="-2" opacity="0.97">3 DAYS</text>
+            <text x="29" y="92" font-family="-apple-system,Helvetica Neue,Arial,sans-serif" font-weight="700" font-size="13" fill="#FF6B35" letter-spacing="2.5">LEFT IN JULY — ACT NOW</text>
+          </svg>
+        </div>
+        <div class="em-section">
+          <div class="em-section-hed">Your July streak isn't secured yet.</div>
+          <div class="em-section-body">July ends in 3 days and you haven't made a transaction this month. One transaction is all it takes — don't let your streak break now.</div>
+        </div>
+        <div class="em-divider"></div>
+        <div class="em-section">
+          <div class="em-section-hed">What you'd lose if the streak breaks</div>
+          <ul class="em-feature-list">
+            <li>
+              <div class="em-feat-icon" style="background:#00D632;color:#000;font-weight:900;font-size:13px;">✓</div>
+              <div class="em-feat-body"><div class="em-feat-title">June — 4 entries locked in</div><div class="em-feat-desc">Already secured. These stay no matter what.</div></div>
+            </li>
+            <li>
+              <div class="em-feat-icon" style="background:#fff;border:2px solid #FF6B35;font-size:13px;">⚠️</div>
+              <div class="em-feat-body"><div class="em-feat-title" style="color:#FF6B35;">July — 0 entries so far</div><div class="em-feat-desc">Transact before July 31 to stay in the streak and earn entries.</div></div>
+            </li>
+            <li>
+              <div class="em-feat-icon" style="background:#f0f0f0;font-size:13px;color:#bbb;">🔒</div>
+              <div class="em-feat-body"><div class="em-feat-title" style="color:#999;">August + Streak Safe — at risk</div><div class="em-feat-desc">Break the streak now and you lose eligibility for August entries and the $1,000 drawing.</div></div>
+            </li>
+          </ul>
+          <button class="em-section-cta">Make a transaction now</button>
+        </div>
+        <div class="em-divider"></div>
+        <div class="em-section">
+          <div class="em-section-hed">Any transaction counts</div>
+          <ul class="em-feature-list">
+            <li><div class="em-feat-icon">💸</div><div class="em-feat-body"><div class="em-feat-title">Send or receive money</div><div class="em-feat-desc">Pay a friend, split a bill, or accept a payment.</div></div></li>
+            <li><div class="em-feat-icon">💳</div><div class="em-feat-body"><div class="em-feat-title">Pay with your Cash Card</div><div class="em-feat-desc">In store, online, or at an ATM.</div></div></li>
+            <li><div class="em-feat-icon">📈</div><div class="em-feat-body"><div class="em-feat-title">Invest or move to savings</div><div class="em-feat-desc">Buy Bitcoin, stocks, or transfer to your Cash savings.</div></div></li>
+          </ul>
+        </div>
+        <div class="em-footer">
+          <p>You're receiving this because you're enrolled in Summer Streaks.</p>
+          <p><a href="#">Unsubscribe</a> · <a href="#">Privacy Policy</a> · <a href="#">Help</a></p>
+          <p>Cash App, 1455 Market St, San Francisco, CA 94103</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /emails-section -->
 
 <div class="toast" id="toast"></div>
 <div class="confetti" id="confetti"></div>
@@ -896,23 +991,11 @@
     setTimeout(() => { wrap.innerHTML = ''; }, 3200);
   }
 
-  function openEmailScreen() {
-    document.getElementById('moneyScreen').classList.add('pushed');
-    document.getElementById('emailScreen').classList.add('visible');
-    document.getElementById('emailScreen').scrollTop = 0;
-  }
-
-  function closeEmailScreen() {
-    document.getElementById('moneyScreen').classList.remove('pushed');
-    document.getElementById('emailScreen').classList.remove('visible');
-  }
-
   function tick() {
     const d = new Date();
     const t = d.getHours() + ':' + String(d.getMinutes()).padStart(2,'0');
     document.getElementById('clock').textContent  = t;
     document.getElementById('clock2').textContent = t;
-    document.getElementById('clock3').textContent = t;
   }
   tick(); setInterval(tick, 30000);
   render();
