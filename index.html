@@ -209,6 +209,88 @@
     .m-btn:active { opacity:.85; }
 
     /* ════════════════════════════════════════════
+       EMAIL SCREEN
+    ════════════════════════════════════════════ */
+    .email-screen {
+      position:absolute;inset:0;
+      background:#1a1a1a;overflow-y:auto;scrollbar-width:none;border-radius:46px;
+      transform:translateX(100%);
+      transition:transform .35s cubic-bezier(.4,0,.2,1);
+      will-change:transform;z-index:50;
+    }
+    .email-screen::-webkit-scrollbar { display:none; }
+    .email-screen.visible { transform:translateX(0); }
+
+    /* Mail app chrome */
+    .mail-nav { display:flex;align-items:center;justify-content:space-between;padding:8px 16px 6px; }
+    .mail-back { display:flex;align-items:center;gap:3px;color:#007AFF;font-size:15px;font-weight:400;background:none;border:none;font-family:inherit;cursor:pointer; }
+    .mail-actions { display:flex;gap:18px;align-items:center; }
+    .mail-action-ico { font-size:18px;color:#888; }
+    .mail-subject-row { padding:0 18px 10px; }
+    .mail-subject { font-size:20px;font-weight:700;color:#fff;line-height:1.2;margin-bottom:8px; }
+    .mail-sender-row { display:flex;align-items:center;gap:10px;margin-bottom:4px; }
+    .mail-avatar { width:34px;height:34px;border-radius:50%;background:#00D632;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#000;flex-shrink:0; }
+    .mail-from { flex:1; }
+    .mail-from-name { font-size:14px;font-weight:600;color:#fff; }
+    .mail-from-addr { font-size:11px;color:#666; }
+    .mail-timestamp { font-size:11px;color:#666; }
+    .mail-divider { height:1px;background:rgba(255,255,255,.08);margin:0 0 0; }
+
+    /* Email body rendered in white card */
+    .email-body-wrap { background:#f4f4f4;margin:0;border-radius:0 0 46px 46px;padding-bottom:40px; }
+    .email-body { background:#fff;max-width:100%;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif; }
+
+    /* Cash App email header */
+    .em-header { background:#000;padding:16px 20px;text-align:center; }
+    .em-logo { display:inline-flex;align-items:center;gap:8px; }
+    .em-logo-mark { width:28px;height:28px;background:#00D632;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#000; }
+    .em-logo-text { font-size:17px;font-weight:800;color:#fff;letter-spacing:-.2px; }
+
+    /* ── SUMMER STREAKS BANNER ── */
+    .em-streak-banner {
+      background:linear-gradient(160deg,#1c0f00 0%,#2a1500 50%,#1a0c00 100%);
+      padding:20px 20px 18px;
+      border-bottom:2px solid rgba(255,170,0,.2);
+      position:relative;overflow:hidden;
+    }
+    .em-streak-banner::before {
+      content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;
+      background:radial-gradient(circle,rgba(255,170,0,.15) 0%,transparent 65%);
+      pointer-events:none;
+    }
+    .em-banner-eyebrow { font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.4px;color:#FFAA00;margin-bottom:6px; }
+    .em-banner-headline { font-size:20px;font-weight:900;color:#fff;letter-spacing:-.3px;line-height:1.2;margin-bottom:4px; }
+    .em-banner-sub { font-size:13px;color:rgba(255,255,255,.6);line-height:1.45;margin-bottom:14px; }
+    .em-banner-progress { display:flex;align-items:center;gap:6px;margin-bottom:14px; }
+    .em-bp-dot { width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0; }
+    .em-bp-dot.done { background:linear-gradient(135deg,#FFAA00,#FF6B35);color:#fff;font-weight:800;font-size:11px; }
+    .em-bp-dot.active { background:rgba(255,170,0,.12);border:2px solid #FFAA00; }
+    .em-bp-dot.locked { background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.1);color:rgba(255,255,255,.2);font-size:11px; }
+    .em-bp-line { flex:1;height:2px; }
+    .em-bp-line.done { background:linear-gradient(90deg,#FF6B35,#FFAA00); }
+    .em-bp-line.pending { background:rgba(255,255,255,.1); }
+    .em-bp-labels { display:flex;justify-content:space-between;margin-bottom:14px;margin-top:-4px; }
+    .em-bp-lbl { font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;width:28px;text-align:center; }
+    .em-bp-lbl.active,.em-bp-lbl.done { color:#FFAA00; }
+    .em-bp-lbl.locked { color:rgba(255,255,255,.2); }
+    .em-banner-cta { display:block;width:100%;background:linear-gradient(135deg,#FFAA00,#FF6B35);color:#fff;border:none;border-radius:100px;padding:13px;font-size:14px;font-weight:800;text-align:center;cursor:pointer;font-family:inherit;letter-spacing:-.1px;box-shadow:0 4px 14px rgba(255,170,0,.3); }
+
+    /* Email body content */
+    .em-section { padding:22px 20px;border-bottom:1px solid #eee; }
+    .em-section:last-child { border-bottom:none; }
+    .em-section-hed { font-size:17px;font-weight:800;color:#111;line-height:1.3;margin-bottom:8px; }
+    .em-section-body { font-size:14px;color:#555;line-height:1.6;margin-bottom:14px; }
+    .em-section-cta { display:block;width:100%;background:#00D632;color:#000;border:none;border-radius:100px;padding:13px;font-size:14px;font-weight:800;text-align:center;cursor:pointer;font-family:inherit; }
+    .em-reward-row { display:flex;gap:10px;margin-bottom:14px; }
+    .em-reward-item { flex:1;background:#f9f9f9;border-radius:12px;padding:12px;text-align:center; }
+    .em-reward-icon { font-size:22px;margin-bottom:4px; }
+    .em-reward-month { font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#999;margin-bottom:2px; }
+    .em-reward-val { font-size:13px;font-weight:800;color:#111; }
+    .em-footer { background:#f4f4f4;padding:20px;text-align:center; }
+    .em-footer p { font-size:10px;color:#aaa;line-height:1.5;margin-bottom:6px; }
+    .em-footer a { color:#00D632;text-decoration:none; }
+
+    /* ════════════════════════════════════════════
        TRANSACTION SCREEN
     ════════════════════════════════════════════ */
     .tx-content { color:var(--text);padding-bottom:40px; }
@@ -397,7 +479,7 @@
                 <div class="tx-total-lbl">Total entries</div>
                 <div class="tx-total-num" id="txTotalEntries">4 🔥</div>
               </div>
-              <div class="tx-entry-status needs" id="txEntryStatus">Make 1 transaction to secure your streak</div>
+              <div class="tx-entry-status needs" id="txEntryStatus">Make 1 transaction each month to secure your streak</div>
             </div>
             <!-- Per-month breakdown -->
             <div class="tx-month-breakdown">
@@ -435,6 +517,111 @@
         </div>
       </div><!-- /txScreen -->
 
+
+      <!-- ══ SCREEN 3: Email ══ -->
+      <div class="email-screen" id="emailScreen">
+
+        <div class="status-bar" style="color:#fff">
+          <span id="clock3">9:41</span>
+          <div class="sb-icons"><span>▲▲▲</span><span style="font-size:14px">WiFi</span><span>🔋</span></div>
+        </div>
+
+        <div class="mail-nav">
+          <button class="mail-back" onclick="closeEmailScreen()">‹ Inbox</button>
+          <div class="mail-actions">
+            <span class="mail-action-ico">🗂</span>
+            <span class="mail-action-ico">🗑</span>
+            <span class="mail-action-ico">↩</span>
+          </div>
+        </div>
+
+        <div class="mail-subject-row">
+          <div class="mail-subject">☀️ Your streak is heating up — don't break it</div>
+          <div class="mail-sender-row">
+            <div class="mail-avatar">$</div>
+            <div class="mail-from">
+              <div class="mail-from-name">Cash App</div>
+              <div class="mail-from-addr">no-reply@cash.app</div>
+            </div>
+            <div class="mail-timestamp">10:14 AM</div>
+          </div>
+        </div>
+
+        <div class="mail-divider"></div>
+
+        <!-- Rendered email body -->
+        <div class="email-body-wrap">
+          <div class="email-body">
+
+            <!-- Cash App header -->
+            <div class="em-header">
+              <div class="em-logo">
+                <div class="em-logo-mark">$</div>
+                <div class="em-logo-text">Cash App</div>
+              </div>
+            </div>
+
+            <!-- ★ Summer Streaks banner ★ -->
+            <div class="em-streak-banner">
+              <div class="em-banner-eyebrow">☀️ Summer Streaks — Limited campaign</div>
+              <div class="em-banner-headline">June is locked in.<br>Keep your streak alive.</div>
+              <div class="em-banner-sub">You're 2 months away from "Streak Safe" status — and a chance to win $1,000. Send, spend, or save in July to stay on track.</div>
+
+              <!-- Progress dots -->
+              <div class="em-banner-progress">
+                <div class="em-bp-dot done">✓</div>
+                <div class="em-bp-line done"></div>
+                <div class="em-bp-dot active">🌊</div>
+                <div class="em-bp-line pending"></div>
+                <div class="em-bp-dot locked">🏆</div>
+              </div>
+              <div class="em-bp-labels">
+                <div class="em-bp-lbl done">Jun</div>
+                <div style="flex:1"></div>
+                <div class="em-bp-lbl active">Jul</div>
+                <div style="flex:1"></div>
+                <div class="em-bp-lbl locked">Aug</div>
+              </div>
+
+              <button class="em-banner-cta">Earn your July entries →</button>
+            </div>
+
+            <!-- Reward ladder section -->
+            <div class="em-section">
+              <div class="em-section-hed">Complete all 3 months to unlock every reward</div>
+              <div class="em-reward-row">
+                <div class="em-reward-item">
+                  <div class="em-reward-icon">☀️</div>
+                  <div class="em-reward-month">June</div>
+                  <div class="em-reward-val" style="color:#00D632">$2.50 ✓</div>
+                </div>
+                <div class="em-reward-item">
+                  <div class="em-reward-icon">🌊</div>
+                  <div class="em-reward-month">July</div>
+                  <div class="em-reward-val">$2.50 + Status</div>
+                </div>
+                <div class="em-reward-item">
+                  <div class="em-reward-icon">🏆</div>
+                  <div class="em-reward-month">August</div>
+                  <div class="em-reward-val">$5 + Streak Safe</div>
+                </div>
+              </div>
+              <div class="em-section-body">Users who complete all 3 months see churn drop from 18.7% to 7.4% by month 6. The streak is just the start.</div>
+              <button class="em-section-cta">Open Cash App</button>
+            </div>
+
+            <!-- Footer -->
+            <div class="em-footer">
+              <p>You're receiving this because you're a Cash App customer.<br>
+              <a href="#">Unsubscribe</a> · <a href="#">Privacy Policy</a> · <a href="#">Help</a></p>
+              <p>Cash App, 1455 Market St, San Francisco, CA 94103</p>
+            </div>
+
+          </div>
+        </div>
+
+      </div><!-- /emailScreen -->
+
     </div>
   </div>
 </div>
@@ -446,6 +633,9 @@
   <div class="demo-row c2">
     <button class="dbtn" onclick="advanceMonth()">⏩ Advance month</button>
     <button class="dbtn r" onclick="resetAll()">↺ Reset all</button>
+  </div>
+  <div class="demo-row">
+    <button class="dbtn" onclick="openEmailScreen()">📧 Preview CRM email</button>
   </div>
 </div>
 
@@ -575,7 +765,7 @@
 
     const statusEl = document.getElementById('txEntryStatus');
     statusEl.textContent = mEnt === 0
-      ? 'Make 1 transaction to secure your streak'
+      ? 'Make 1 transaction each month to secure your streak'
       : '✓ Streak secured — more transactions = better odds';
     statusEl.className = 'tx-entry-status ' + (mEnt === 0 ? 'needs' : 'secured');
 
@@ -706,11 +896,23 @@
     setTimeout(() => { wrap.innerHTML = ''; }, 3200);
   }
 
+  function openEmailScreen() {
+    document.getElementById('moneyScreen').classList.add('pushed');
+    document.getElementById('emailScreen').classList.add('visible');
+    document.getElementById('emailScreen').scrollTop = 0;
+  }
+
+  function closeEmailScreen() {
+    document.getElementById('moneyScreen').classList.remove('pushed');
+    document.getElementById('emailScreen').classList.remove('visible');
+  }
+
   function tick() {
     const d = new Date();
     const t = d.getHours() + ':' + String(d.getMinutes()).padStart(2,'0');
     document.getElementById('clock').textContent  = t;
     document.getElementById('clock2').textContent = t;
+    document.getElementById('clock3').textContent = t;
   }
   tick(); setInterval(tick, 30000);
   render();
